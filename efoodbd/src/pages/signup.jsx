@@ -19,7 +19,7 @@ const SignUp = () => {
     try {
       // Sign up using Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      alert("Sign Up Successful!");
+      const signedUpEmail = userCredential.user.email;
 
       // After signing up, save user data in the database
       const response = await fetch("http://localhost:5000/api/signup", {
@@ -40,6 +40,9 @@ const SignUp = () => {
       if (!response.ok) {
         throw new Error("Failed to save user data to the database.");
       }
+      
+      // Store email in localStorage
+      localStorage.setItem("userEmail", signedUpEmail);
 
       alert("Account created successfully!");
       navigate("/"); // Redirect to the homepage or login page

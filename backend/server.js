@@ -69,6 +69,43 @@ app.post("/api/signup", (req, res) => {
   }
 });
 
+// Get User Data by Email
+app.get("/api/users", (req, res) => {
+  const { email } = req.query; // Fetch email from query parameters
+
+  if (!email) {
+    return res.status(400).send("Email is required");
+  }
+
+  // Query both buyers and sellers tables
+  const sellerQuery = "SELECT * FROM sellers WHERE email = ?";
+  const buyerQuery = "SELECT * FROM buyers WHERE email = ?";
+
+  db.query(sellerQuery, [email], (err, sellerResults) => {
+    if (err) {
+      console.error("Error fetching seller:", err);
+      return res.status(500).send("Error fetching user data");
+    }
+    if (sellerResults.length > 0) {
+      return res.json({ ...sellerResults[0], role: "Seller" });
+    }
+
+    db.query(buyerQuery, [email], (err, buyerResults) => {
+      if (err) {
+        console.error("Error fetching buyer:", err);
+        return res.status(500).send("Error fetching user data");
+      }
+      if (buyerResults.length > 0) {
+        return res.json({ ...buyerResults[0], role: "Buyer" });
+      }
+
+      return res.status(404).send("User not found");
+    });
+  });
+});
+
+
+
 // Start Server
 const PORT = 5000;
 app.listen(PORT, () => {

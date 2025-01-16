@@ -14,7 +14,10 @@ const SignIn = () => {
     try {
       // Sign in with Firebase Authentication
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const loggedInEmail = userCredential.user.email; // Get the email from the user object
       alert("Sign In Successful!");
+
+      localStorage.setItem("userEmail", loggedInEmail); // save email in local storage
 
       // Fetch user role from the backend
       const response = await fetch(`http://localhost:5000/api/users?email=${email}`);
