@@ -25,9 +25,9 @@ const SignIn = () => {
       const userData = await response.json();
 
       if (userData.role === "Seller") {
-        navigate("/seller-dashboard"); // Navigate to Seller Dashboard
+        navigate("/profile"); // Navigate to Seller Dashboard
       } else if (userData.role === "Buyer") {
-        navigate("/buyer-dashboard"); // Navigate to Buyer Dashboard
+        navigate("/profile"); // Navigate to Buyer Dashboard
       } else {
         setError("User role not found.");
       }

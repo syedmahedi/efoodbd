@@ -10,6 +10,7 @@ const SignUp = () => {
   const [phone, setPhone] = useState("");
   const [location, setLocation] = useState("");
   const [role, setRole] = useState(""); // To distinguish between Buyer and Seller
+  const [foodCategory, setFoodCategory] = useState(""); // Only for sellers
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -20,12 +21,8 @@ const SignUp = () => {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       alert("Sign Up Successful!");
 
-      // After signing up, save user data in the appropriate table (Buyer or Seller)
-      const apiUrl = role === "Buyer" 
-        ? "http://localhost:5000/api/buyers" 
-        : "http://localhost:5000/api/sellers";
-
-      const response = await fetch(apiUrl, {
+      // After signing up, save user data in the database
+      const response = await fetch("http://localhost:5000/api/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,6 +32,8 @@ const SignUp = () => {
           email,
           phone,
           location,
+          role,
+          foodCategory: role === "Seller" ? foodCategory : null, // Only include for sellers
         }),
       });
 
@@ -115,6 +114,16 @@ const SignUp = () => {
             <option value="Seller">Seller</option>
           </select>
         </div>
+
+        {role === "Seller" && (
+          <input
+            type="text"
+            placeholder="Food Category (e.g., Cakes)"
+            value={foodCategory}
+            onChange={(e) => setFoodCategory(e.target.value)}
+            className="w-full p-2 border rounded mb-4"
+          />
+        )}
 
         <button
           type="submit"

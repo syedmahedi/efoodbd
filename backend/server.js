@@ -6,14 +6,14 @@ const app = express();
 
 // Middleware
 app.use(cors());
-app.use(express.json()); // Parse JSON request bodies
+app.use(express.json());
 
 // MySQL Connection
 const db = mysql.createConnection({
-  host: "localhost", // MySQL server address
-  user: "root", // MySQL username
-  password: "1232018mM.", // MySQL password
-  database: "home_food_selling", // Your database name
+  host: "localhost",
+  user: "root",
+  password: "1232018mM.",
+  database: "home_food_selling",
 });
 
 // Connect to MySQL
@@ -24,8 +24,6 @@ db.connect((err) => {
   }
   console.log("Connected to MySQL Database");
 });
-
-// API Endpoints
 
 // Sign Up (Save Buyer or Seller)
 app.post("/api/signup", (req, res) => {
@@ -39,7 +37,7 @@ app.post("/api/signup", (req, res) => {
     `;
     db.query(
       query,
-      [name, email, phone, location, foodCategory],
+      [name, email, phone, location, foodCategory || null],
       (err, result) => {
         if (err) {
           console.error("Error saving seller:", err);
@@ -49,7 +47,7 @@ app.post("/api/signup", (req, res) => {
         }
       }
     );
-  } else {
+  } else if (role === "Buyer") {
     query = `
       INSERT INTO buyers (name, email, phone, location)
       VALUES (?, ?, ?, ?)
@@ -66,38 +64,9 @@ app.post("/api/signup", (req, res) => {
         }
       }
     );
+  } else {
+    res.status(400).send("Invalid role specified");
   }
-});
-
-// Get User Data by Email (for Sign-In Role Check)
-app.get("/api/users", (req, res) => {
-  const { email } = req.query;
-
-  // Check in both sellers and buyers tables
-  const sellerQuery = "SELECT * FROM sellers WHERE email = ?";
-  const buyerQuery = "SELECT * FROM buyers WHERE email = ?";
-
-  db.query(sellerQuery, [email], (err, sellerResults) => {
-    if (err) {
-      console.error("Error fetching seller:", err);
-      return res.status(500).send("Error fetching user data");
-    }
-    if (sellerResults.length > 0) {
-      return res.json({ ...sellerResults[0], role: "Seller" });
-    }
-
-    db.query(buyerQuery, [email], (err, buyerResults) => {
-      if (err) {
-        console.error("Error fetching buyer:", err);
-        return res.status(500).send("Error fetching user data");
-      }
-      if (buyerResults.length > 0) {
-        return res.json({ ...buyerResults[0], role: "Buyer" });
-      }
-
-      return res.status(404).send("User not found");
-    });
-  });
 });
 
 // Start Server
