@@ -153,9 +153,9 @@ const upload = multer({ storage });
 
 // API Endpoint to Update Profile
 app.put("/api/profileUpdate", upload.single("profilePicture"), (req, res) => {
-  const { email, name, phone, location, occupation, bio, role } = req.body;
+  const { email, name, phone, location, occupation, bio } = req.body;
 
-  if (!email || !role) {
+  if (!email) {
     return res.status(400).json({ error: "Email and role are required for profile update." });
   }
 
@@ -203,41 +203,83 @@ app.put("/api/profileUpdate", upload.single("profilePicture"), (req, res) => {
 });
 
 
+// Add a new post by a seller
+app.post("/api/foodPosts", upload.single("foodImage"), (req, res) => {
+  const { sellerId, title, description } = req.body;
 
-
-
-app.post('/api/food-posts', async (req, res) => {
-  const { sellerId, description, imagePath } = req.body;
-
-  try {
-      await db.query('INSERT INTO food_posts (sellerId, description, imagePath) VALUES (?, ?, ?)', 
-      [sellerId, description, imagePath]);
-      res.status(201).json({ message: 'Food post created successfully' });
-  } catch (error) {
-      res.status(500).json({ error: 'Failed to create food post' });
+  if (!sellerId || !title || !description) {
+    return res.status(400).json({ error: "Seller ID, title, and description are required." });
   }
+
+  const foodImagePath = req.file ? `/uploads/${req.file.filename}` : null;
+
+  const query = `
+    INSERT INTO food_posts (seller_id, title, description, food_image)
+    VALUES (?, ?, ?, ?)
+  `;
+
+  const params = [sellerId, title, description, foodImagePath];
+
+  db.query(query, params, (err, result) => {
+    if (err) {
+      console.error("Error creating food post:", err.message);
+      return res.status(500).json({ error: "An error occurred while creating the post." });
+    }
+
+    res.json({ message: "Food post created successfully!", postId: result.insertId });
+  });
+});
+
+// Get all posts by a seller
+app.get("/api/sellers/:id/posts", (req, res) => {
+  const { id } = req.params;
+
+  const query = `
+    SELECT * FROM food_posts WHERE seller_id = ?
+    ORDER BY created_at DESC
+  `;
+
+  db.query(query, [id], (err, results) => {
+    if (err) {
+      console.error("Error fetching food posts:", err.message);
+      return res.status(500).json({ error: "An error occurred while fetching posts." });
+    }
+
+    res.json(results);
+  });
 });
 
 
-app.get('/api/food-posts', async (req, res) => {
-  const { sellerId } = req.query;
 
-  try {
-      const query = sellerId
-          ? 'SELECT * FROM food_posts WHERE sellerId = ?'
-          : 'SELECT * FROM food_posts';
-      const results = await db.query(query, [sellerId]);
-      res.status(200).json(results);
-  } catch (error) {
-      res.status(500).json({ error: 'Failed to fetch food posts' });
-  }
+app.get("/api/sellers/:id", (req, res) => {
+  const { id } = req.params;
+
+  const sellerQuery = "SELECT * FROM sellers WHERE id = ?";
+  const postsQuery = "SELECT * FROM food_posts WHERE seller_id = ? ORDER BY created_at DESC";
+
+  db.query(sellerQuery, [id], (err, sellerResults) => {
+    if (err) {
+      console.error("Error fetching seller details:", err);
+      return res.status(500).json({ error: "Failed to fetch seller details" });
+    }
+
+    if (sellerResults.length === 0) {
+      return res.status(404).json({ error: "Seller not found" });
+    }
+
+    db.query(postsQuery, [id], (err, postResults) => {
+      if (err) {
+        console.error("Error fetching food posts:", err);
+        return res.status(500).json({ error: "Failed to fetch food posts" });
+      }
+
+      res.json({
+        seller: sellerResults[0],
+        posts: postResults,
+      });
+    });
+  });
 });
-
-
-
-
-
-
 
 
 
