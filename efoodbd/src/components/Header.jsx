@@ -3,6 +3,7 @@ import { auth } from "../firebase";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 
+
 const Header = () => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ const Header = () => {
         <Link to="/" className="text-2xl font-bold">
           eFoodBD
         </Link>
-        <nav>
+        <nav>         
           <ul className="flex gap-6">
             {!user ? (
               <>
@@ -59,12 +60,12 @@ const Header = () => {
             ) : (
               <>
                 <li>
-                  <span
-                    className="font-medium cursor-pointer hover:underline"
+                  <button
+                    className="bg-green-500 px-4 py-2 rounded text-white font-medium hover:bg-green-600"
                     onClick={handleProfileClick}
                   >
                     Welcome, {user.email.split("@")[0]}!
-                  </span>
+                  </button>
                 </li>
                 <li>
                   <button
