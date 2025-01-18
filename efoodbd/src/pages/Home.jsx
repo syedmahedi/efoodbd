@@ -25,13 +25,14 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="bg-primary-content min-h-screen">
       <Header />
+      <h1 className="text-center text-5xl mt-12 text-white">ঘরে ঘরে গড়ে তুলুন <span className="text-primary">আপনার ব্যবসা</span></h1>
       <div className="container mx-auto py-6">
         <SearchBar />
-        <h2 className="text-2xl font-bold my-6 text-gray-800">Featured Sellers</h2>
+        <h2 className="text-2xl font-bold my-6 text-primary">Featured Sellers</h2>
         {error && <p className="text-red-500">{error}</p>}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-base-content">
           {sellers.map((seller) => (
             <SellerCard key={seller.id} seller={seller} />
           ))}

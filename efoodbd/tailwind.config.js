@@ -8,9 +8,12 @@ export default {
     extend: {
       colors: {
         primary: '#FC8934',
-        hover: '#B66326'  // Your custom primary color
+        hover: '#B66326',
+        gold: '#ffcc00'// Your custom primary color
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('daisyui'),
+  ],
 }

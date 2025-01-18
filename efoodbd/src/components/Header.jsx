@@ -31,10 +31,10 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-primary text-white py-4">
+    <header className="bg-primary-content py-4 px-2">
       <div className="container mx-auto flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold">
-          eFoodBD
+        <Link to="/" className="text-3xl font-bold text-primary hover:text-hover">
+          <span className="text-gold">e</span>FoodBD
         </Link>
         <nav>         
           <ul className="flex gap-6">
@@ -43,17 +43,15 @@ const Header = () => {
                 <li>
                   <Link
                     to="/signin"
-                    className="hover:underline text-white font-medium"
                   >
-                    Sign In
+                    <button className="bg-primary px-4 py-2 rounded-xl text-white font-medium hover:bg-hover">Sign In</button>
                   </Link>
                 </li>
                 <li>
                   <Link
                     to="/signup"
-                    className="hover:underline text-white font-medium"
                   >
-                    Sign Up
+                    <button className="bg-primary px-4 py-2 rounded-xl text-white font-medium hover:bg-hover">Sign Up</button>
                   </Link>
                 </li>
               </>
@@ -61,16 +59,17 @@ const Header = () => {
               <>
                 <li>
                   <button
-                    className="bg-green-500 px-4 py-2 rounded text-white font-medium hover:bg-green-600"
+                    className="bg-primary px-4 py-2 rounded-xl text-white font-medium hover:bg-hover"
                     onClick={handleProfileClick}
                   >
-                    Welcome, {user.email.split("@")[0]}!
+                    {/* {user.email.split("@")[0]}! */}
+                    My Profile
                   </button>
                 </li>
                 <li>
                   <button
                     onClick={handleSignOut}
-                    className="bg-red-500 px-4 py-2 rounded text-white font-medium hover:bg-red-600"
+                    className="bg-red-600 px-4 py-2 rounded-xl text-white font-medium hover:bg-red-600"
                   >
                     Sign Out
                   </button>

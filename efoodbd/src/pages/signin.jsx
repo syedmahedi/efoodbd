@@ -40,10 +40,10 @@ const SignIn = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+    <div className="min-h-screen bg-primary-content flex items-center justify-center">
       <form
         onSubmit={handleSignIn}
-        className="bg-white p-6 rounded shadow-md w-full max-w-md"
+        className="bg-primary-content p-6 rounded text-primary shadow-md shadow-primary w-full max-w-md"
       >
         <h2 className="text-2xl font-bold mb-6">Sign In</h2>
         {error && <p className="text-red-500 mb-4">{error}</p>}
@@ -63,7 +63,7 @@ const SignIn = () => {
         />
         <button
           type="submit"
-          className="w-full bg-primary text-white p-2 rounded hover:bg-hover"
+          className="w-full bg-primary text-white p-2 rounded-xl hover:bg-hover mt-4"
         >
           Sign In
         </button>

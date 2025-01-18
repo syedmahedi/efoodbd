@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import Header from "../components/Header";
 
 const SellerProfile = () => {
   const { id } = useParams();
@@ -46,23 +47,25 @@ const SellerProfile = () => {
     return <p className="text-center mt-6">Loading...</p>;
   }
 
-  return (
-    <div className="max-w-6xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-8">
+  return (  
+    <div className="bg-primary-content min-h-screen">
+      <Header/>
+    <div className="max-w-6xl mx-auto p-6 rounded-lg py-8">
       {/* Seller Information */}
       <div className="flex items-center space-x-6">
-        <div className="w-32 h-32 rounded-full bg-gray-200 overflow-hidden">
+        <div className="w-36 h-36 rounded-full bg-gray-200 border-4 border-primary overflow-hidden">
           <img
             src={seller.profilePicture || "/default-profile.png"}
-            alt={`${seller.name}'s profile`}
+            // alt={seller.name}
             className="w-full h-full object-cover"
           />
         </div>
         <div>
-          <h2 className="text-3xl font-bold text-gray-800">{seller.name}</h2>
-          <p className="text-gray-600 mt-1">
+          <h2 className="text-3xl font-bold text-primary">{seller.name}</h2>
+          <p className="mt-1">
             <span className="font-semibold">Location:</span> {seller.location}
           </p>
-          <p className="text-gray-600">
+          <p>
             <span className="font-semibold">Category:</span> {seller.foodCategory}
           </p>
         </div>
@@ -70,8 +73,8 @@ const SellerProfile = () => {
 
       {/* About Seller */}
       <div className="mt-6">
-        <h3 className="text-2xl font-semibold text-gray-800">About the Seller</h3>
-        <p className="text-gray-700 mt-3 leading-relaxed">
+        <h3 className="text-primary text-2xl font-semibol">About the Seller</h3>
+        <p className=" mt-3 leading-relaxed">
           {seller.description ||
             "No description provided. This seller has not shared details about their business yet."}
         </p>
@@ -79,13 +82,13 @@ const SellerProfile = () => {
 
       {/* Seller Posts */}
       <div className="mt-8">
-        <h3 className="text-2xl font-semibold text-gray-800">Seller's Posts</h3>
+        <h3 className="text-2xl font-semibold text-primary">Seller's Posts</h3>
         {posts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6">
             {posts.map((post) => (
               <div
                 key={post.id}
-                className="border rounded-lg shadow-md overflow-hidden bg-gray-50"
+                className="border border-gray-500 rounded-lg shadow-md overflow-hidden"
               >
                 <img
                   src={post.food_image ? `http://localhost:5000${post.food_image}` : "/default-food.jpg"}
@@ -93,10 +96,10 @@ const SellerProfile = () => {
                   className="w-full h-48 object-cover"
                 />
                 <div className="p-4">
-                  <h4 className="text-lg font-bold text-gray-800">{post.title}</h4>
-                  <p className="text-sm text-gray-700 mt-2">{post.description}</p>
+                  <h4 className="text-lg font-bold text-primary">{post.title}</h4>
+                  <p className="text-sm mt-2">{post.description}</p>
                   <button
-                    className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                    className="mt-4 bg-primary text-white px-4 py-2 rounded-lg hover:bg-hover"
                     onClick={() => alert(`Order functionality for "${post.title}" is under development!`)}
                   >
                     Order Now
@@ -110,6 +113,7 @@ const SellerProfile = () => {
         )}
       </div>
     </div>
+  </div>
   );
 };
 

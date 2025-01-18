@@ -9,17 +9,17 @@ const SearchBar = () => {
   };
 
   return (
-    <div className="flex items-center bg-white shadow-md rounded-lg p-4">
+    <div className="flex items-center bg-primary-content-800 shadow-md rounded-lg p-4">
       <input
         type="text"
-        className="flex-grow px-4 py-2 border rounded-lg focus:outline-none"
+        className="flex-grow px-4 py-2 border border-gray-500 rounded-lg focus:outline-none"
         placeholder="Search by location or category..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
       <button
         onClick={handleSearch}
-        className="ml-4 bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+        className="ml-4 bg-primary text-white px-4 py-2 rounded-lg hover:bg-hover"
       >
         Search
       </button>
