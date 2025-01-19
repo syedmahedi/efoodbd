@@ -10,7 +10,7 @@ const SellerCard = ({ seller }) => {
   return (
     <div
       onClick={handleClick}
-      className="border border-gray-500 p-4 rounded-lg cursor-pointer hover:shadow-sm hover:shadow-white"
+      className="border border-gray-500 p-4 rounded-lg cursor-pointer hover:shadow-md hover:shadow-gray-500 transition-all duration-300"
     >
       <div className="flex items-center justify-between">
         <div>
@@ -18,11 +18,11 @@ const SellerCard = ({ seller }) => {
           <p>{seller.location}</p>
           <p>{seller.category}</p>
         </div>
-        <div className="w-24 h-24 rounded-full bg-gray-200 border-2 border-primary overflow-hidden">
+        <div className="w-24 h-24 rounded-full bg-gray-200 border-2 border-primary overflow-hidden hover:shadow-md hover:shadow-primary">
           <img
             src={seller.profilePicture || "/default-profile.png"}
             // alt={seller.name}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover scale-90 hover:scale-110 ease-in duration-500"
           />
         </div>
       </div>     

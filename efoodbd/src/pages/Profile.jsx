@@ -7,10 +7,11 @@ const Profile = () => {
   const [error, setError] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({});
-  const [profilePicture, setProfilePicture] = useState(null);
   const [foodPosts, setFoodPosts] = useState([]);
   const [newPost, setNewPost] = useState({ title: "", description: "", foodImage: null });
   const navigate = useNavigate();
+  
+
 
   useEffect(() => {
     const email = localStorage.getItem("userEmail");
@@ -50,37 +51,14 @@ const Profile = () => {
     }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleFileChange = (e) => {
-    setProfilePicture(e.target.files[0]);
-  };
-
-  const handleProfileUpdate = async () => {
-    const formDataToSend = new FormData();
-    Object.keys(formData).forEach((key) => {
-      formDataToSend.append(key, formData[key]);
-    });
-    if (profilePicture) {
-      formDataToSend.append("profilePicture", profilePicture);
-    }
-    formDataToSend.append("email", localStorage.getItem("userEmail")); // Add email to identify the user
-    formDataToSend.append("role", profileData.role);
-
+  const fetchOrders = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/profileUpdate", {
-        method: "PUT",
-        body: formDataToSend,
-      });
-      if (!response.ok) throw new Error("Failed to update profile.");
-      alert("Profile updated successfully!");
-      setEditMode(false);
-      setProfilePicture(null); // Clear the profile picture
+      const response = await fetch(`http://localhost:5000/api/sellers/${profileData.id}/orders`);
+      if (!response.ok) throw new Error("Failed to fetch orders.");
+      const ordersData = await response.json();
+      setOrders(ordersData);
     } catch (err) {
-      alert("Error updating profile: " + err.message);
+      alert("Error fetching orders: " + err.message);
     }
   };
 
@@ -92,6 +70,22 @@ const Profile = () => {
     });
   };
 
+  const handleDeletePost = async (postId) => {
+    if (window.confirm("Are you sure you want to delete this post?")) {
+        try {
+            const response = await fetch(`http://localhost:5000/api/foodPosts/${postId}`, {
+                method: "DELETE",
+            });
+            if (!response.ok) throw new Error("Failed to delete post.");
+            alert("Post deleted successfully!");
+            setFoodPosts((prev) => prev.filter((post) => post.id !== postId)); // Update UI
+        } catch (err) {
+            alert("Error deleting post: " + err.message);
+        }
+    }
+};
+
+
   const handlePostSubmit = async (e) => {
     e.preventDefault();
 
@@ -99,6 +93,7 @@ const Profile = () => {
     formDataToSend.append("sellerId", profileData.id);
     formDataToSend.append("title", newPost.title);
     formDataToSend.append("description", newPost.description);
+    formDataToSend.append("price", newPost.price);
     if (newPost.foodImage) {
       formDataToSend.append("foodImage", newPost.foodImage);
     }
@@ -110,7 +105,7 @@ const Profile = () => {
       });
       if (!response.ok) throw new Error("Failed to create food post.");
       alert("Food post created successfully!");
-      setNewPost({ title: "", description: "", foodImage: null });
+      setNewPost({ title: "", description: "", foodImage: null,price: "" });
       fetchFoodPosts(profileData.id); // Refresh posts
     } catch (err) {
       alert("Error creating food post: " + err.message);
@@ -192,6 +187,14 @@ const Profile = () => {
                       className="border border-gray-600 w-full p-2 rounded"
                       accept="image/*"
                     />
+                    <input
+                      type="number"
+                      name="price"
+                      placeholder="Price (in BDT)"
+                      value={newPost.price}
+                      onChange={handlePostChange}
+                      className="border border-gray-600 w-full p-2 rounded"
+                    />
                     <div className="flex justify-end">
                       <button
                         type="submit"
@@ -219,6 +222,13 @@ const Profile = () => {
                           <div className="p-4">
                             <h4 className="text-lg font-bold text-primary">{post.title}</h4>
                             <p className="text-sm mt-2">{post.description}</p>
+                            <p className="text-xl mt-2 font-bold">৳{post.price}</p>
+                            <button
+                                onClick={() => handleDeletePost(post.id)}
+                                className="btn bg-red-600 text-white hover:bg-red-700 mt-4"
+                            >
+                                Delete Post
+                            </button>
                           </div>
                         </div>
                       ))

@@ -27,7 +27,10 @@ const Home = () => {
   return (
     <div className="bg-primary-content min-h-screen">
       <Header />
-      <h1 className="text-center text-5xl mt-12 text-white">ঘরে ঘরে গড়ে তুলুন <span className="text-primary">আপনার ব্যবসা</span></h1>
+      <div className="container mx-auto text-center">
+        <h1 className="text-5xl mt-12 text-white">নিজের এলাকায় গড়ে তুলুন <span className="text-primary">আপনার ব্যবসা</span></h1>
+        <p className="mt-4">ঘরের বানানো খাবার পৌছে দিন সবার কাছে !</p>
+      </div>
       <div className="container mx-auto py-6">
         <SearchBar />
         <h2 className="text-2xl font-bold my-6 text-primary">Featured Sellers</h2>

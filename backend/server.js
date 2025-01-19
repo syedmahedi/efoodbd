@@ -205,20 +205,20 @@ app.put("/api/profileUpdate", upload.single("profilePicture"), (req, res) => {
 
 // Add a new post by a seller
 app.post("/api/foodPosts", upload.single("foodImage"), (req, res) => {
-  const { sellerId, title, description } = req.body;
+  const { sellerId, title, description, price } = req.body;
 
-  if (!sellerId || !title || !description) {
-    return res.status(400).json({ error: "Seller ID, title, and description are required." });
+  if (!sellerId || !title || !description || !price) {
+    return res.status(400).json({ error: "Seller ID, title, description and price are required." });
   }
 
   const foodImagePath = req.file ? `/uploads/${req.file.filename}` : null;
 
   const query = `
-    INSERT INTO food_posts (seller_id, title, description, food_image)
-    VALUES (?, ?, ?, ?)
+    INSERT INTO food_posts (seller_id, title, description, food_image, price)
+    VALUES (?, ?, ?, ?, ?)
   `;
 
-  const params = [sellerId, title, description, foodImagePath];
+  const params = [sellerId, title, description, foodImagePath,price];
 
   db.query(query, params, (err, result) => {
     if (err) {
@@ -279,6 +279,43 @@ app.get("/api/sellers/:id", (req, res) => {
       });
     });
   });
+});
+
+
+
+
+//oders
+
+app.post("/api/orders", (req, res) => {
+  const { buyerEmail, sellerId, postId, orderedItem, quantity, contact, price } = req.body;
+
+  const query = `
+    INSERT INTO orders (buyer_email, seller_id, post_id, orderedItem, quantity, contact, total_price)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  const params = [buyerEmail, sellerId, postId, orderedItem, quantity, contact, price];
+
+  db.query(query, params, (err, result) => {
+    if (err) {
+      console.error("Error saving order:", err.message);
+      return res.status(500).json({ error: "Failed to place order" });
+    }
+    res.json({ message: "Order placed successfully!" });
+  });
+});
+
+
+// delete post
+
+app.delete('/api/foodPosts/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+      await db.query('DELETE FROM food_posts WHERE id = ?', [id]);
+      res.status(200).send({ message: 'Post deleted successfully!' });
+  } catch (error) {
+      res.status(500).send({ error: 'Failed to delete post.' });
+  }
 });
 
 

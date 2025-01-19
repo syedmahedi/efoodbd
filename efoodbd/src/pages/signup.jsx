@@ -53,10 +53,10 @@ const SignUp = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+    <div className="min-h-screen bg-primary-content flex items-center justify-center">
       <form
         onSubmit={handleSignUp}
-        className="bg-white p-6 rounded shadow-md w-full max-w-md"
+        className="bg-primary-content p-6 rounded text-primary shadow-md shadow-primary w-full max-w-md"
       >
         <h2 className="text-2xl font-bold mb-6">Sign Up</h2>
         {error && <p className="text-red-500 mb-4">{error}</p>}
@@ -102,7 +102,7 @@ const SignUp = () => {
         />
 
         <div className="mb-4">
-          <label className="block text-gray-700 font-bold mb-2">
+          <label className="block text-gray-600 font-bold mb-2">
             Choose Your Role:
           </label>
           <select
