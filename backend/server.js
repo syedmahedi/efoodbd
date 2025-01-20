@@ -3,6 +3,7 @@ const mysql = require("mysql");
 const cors = require("cors");
 const multer = require('multer');
 const app = express();
+const fs = require("fs");
 const path = require("path");
 
 
@@ -139,10 +140,15 @@ app.get("/api/sellers/:id", (req, res) => {
 });
 
 
-// Multer Configuration for File Uploads
+// Multer configuration for file uploads
+const uploadDir = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+}
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./uploads");
+    cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}-${file.originalname}`);
@@ -153,18 +159,22 @@ const upload = multer({ storage });
 
 // API Endpoint to Update Profile
 app.put("/api/profileUpdate", upload.single("profilePicture"), (req, res) => {
-  const { email, name, phone, location, occupation, bio } = req.body;
+  const { email, name, phone, location, occupation, bio, role } = req.body;
 
-  if (!email) {
+  if (!email || !role) {
     return res.status(400).json({ error: "Email and role are required for profile update." });
   }
 
-  // Determine which table to update based on the role
-  const table = role === "buyer" ? "buyers" : "sellers";
+  // Validate the role and determine the table
+  const validRoles = ["Buyer", "Seller"];
+  if (!validRoles.includes(role)) {
+    return res.status(400).json({ error: "Invalid role provided." });
+  }
 
+  const table = role === "Buyer" ? "buyers" : "sellers";
   const profilePicturePath = req.file ? `/uploads/${req.file.filename}` : null;
 
-  // Updated SQL query with proper handling of NULL values
+  // SQL query to update the profile
   const updateQuery = `
     UPDATE ${table}
     SET
@@ -173,24 +183,23 @@ app.put("/api/profileUpdate", upload.single("profilePicture"), (req, res) => {
       location = ?,
       occupation = ?,
       bio = ?,
-      profile_picture = ?
-    WHERE email = ?
+      profilePicture = ?
+    WHERE email = email
   `;
 
-  // Parameters for the query
   const params = [
-    name || null, // Default to NULL if no value is provided
-    phone || null,
-    location || null,
+    name,
+    phone,
+    location,
     occupation || null,
     bio || null,
-    profilePicturePath, // If `null`, it will be stored as NULL in the database
+    profilePicturePath,
     email,
   ];
 
   db.query(updateQuery, params, (err, result) => {
     if (err) {
-      console.error("Error updating profile:", err.message);
+      console.error("Error updating profile:", err);
       return res.status(500).json({ error: "An error occurred while updating the profile." });
     }
 

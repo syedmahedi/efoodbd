@@ -3,7 +3,6 @@ import { auth } from "../firebase";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 
-
 const Header = () => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
@@ -36,21 +35,47 @@ const Header = () => {
         <Link to="/" className="text-3xl font-bold text-primary hover:text-hover">
           <span className="text-gold">e</span>FoodBD
         </Link>
-        <nav>         
+        
+        {/* Animated GIF in the middle */}
+        <div className="flex justify-center items-center">
+          <img
+            src="/star.png" // Path to the animated icon
+            alt="Animated Icon"
+            className="h-4 w-4" // Adjust size as needed
+          />
+          <img
+            src="/star.png" // Path to the animated icon
+            alt="Animated Icon"
+            className="h-4 w-4" // Adjust size as needed
+          />
+          <img
+            src="/star.png" // Path to the animated icon
+            alt="Animated Icon"
+            className="h-4 w-4" // Adjust size as needed
+          />
+          <img
+            src="/star.png" // Path to the animated icon
+            alt="Animated Icon"
+            className="h-4 w-4" // Adjust size as needed
+          />
+          <img
+            src="/star.png" // Path to the animated icon
+            alt="Animated Icon"
+            className="h-4 w-4" // Adjust size as needed
+          />
+        </div>
+
+        <nav>
           <ul className="flex gap-6">
             {!user ? (
               <>
                 <li>
-                  <Link
-                    to="/signin"
-                  >
+                  <Link to="/signin">
                     <button className="bg-primary px-4 py-2 rounded-xl text-white font-medium hover:bg-hover">Sign In</button>
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    to="/signup"
-                  >
+                  <Link to="/signup">
                     <button className="bg-primary px-4 py-2 rounded-xl text-white font-medium hover:bg-hover">Sign Up</button>
                   </Link>
                 </li>
@@ -62,7 +87,6 @@ const Header = () => {
                     className="bg-primary px-4 py-2 rounded-xl text-white font-medium hover:bg-hover"
                     onClick={handleProfileClick}
                   >
-                    {/* {user.email.split("@")[0]}! */}
                     My Profile
                   </button>
                 </li>

@@ -20,8 +20,8 @@ const SellerCard = ({ seller }) => {
         </div>
         <div className="w-24 h-24 rounded-full bg-gray-200 border-2 border-primary overflow-hidden hover:shadow-md hover:shadow-primary">
           <img
-            src={seller.profilePicture || "/default-profile.png"}
-            // alt={seller.name}
+            src={`http://localhost:5000${seller.profilePicture}` || "/default-profile.png"}
+            alt={seller.name}
             className="w-full h-full object-cover scale-90 hover:scale-110 ease-in duration-500"
           />
         </div>

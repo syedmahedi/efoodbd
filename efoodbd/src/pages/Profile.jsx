@@ -5,7 +5,6 @@ import Header from "../components/Header";
 const Profile = () => {
   const [profileData, setProfileData] = useState(null);
   const [error, setError] = useState("");
-  const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({});
   const [foodPosts, setFoodPosts] = useState([]);
   const [newPost, setNewPost] = useState({ title: "", description: "", foodImage: null });
@@ -112,6 +111,50 @@ const Profile = () => {
     }
   };
 
+
+  //profileUpdate
+  const handleInputChange = (e) => {
+    const { name, value, files } = e.target;
+    setFormData({
+      ...formData,
+      [name]: files ? files[0] : value,
+    });
+  };
+
+
+  const handleProfileUpdate = async (e) => {
+    e.preventDefault();
+  
+    const formDataToSend = new FormData();
+    formDataToSend.append("name", formData.name || "");
+    formDataToSend.append("phone", formData.phone || "");
+    formDataToSend.append("location", formData.location || "");
+    formDataToSend.append("occupation", formData.occupation || "");
+    formDataToSend.append("bio", formData.bio || "");
+    formDataToSend.append("email", profileData.email); // Required
+    formDataToSend.append("role", profileData.role); // Required
+    if (formData.profilePicture) {
+      formDataToSend.append("profilePicture", formData.profilePicture);
+    }
+  
+    try {
+      const response = await fetch(`http://localhost:5000/api/profileUpdate`, {
+        method: "PUT",
+        body: formDataToSend,
+      });
+  
+      if (!response.ok) throw new Error("Failed to update profile.");
+      const updatedData = await response.json();
+      alert("Profile updated successfully!");
+      setProfileData(updatedData);
+      document.getElementById("editProfileModal").close(); // Close modal after update
+    } catch (err) {
+      alert("Error updating profile: " + err.message);
+    }
+  };
+  
+
+
   if (error) return <p className="text-red-500">Error: {error}</p>;
   if (!profileData) return <p>Loading...</p>;
 
@@ -128,31 +171,93 @@ const Profile = () => {
                   <p><strong>Email:</strong> {profileData.email}</p>
                   <p><strong>Phone:</strong> {profileData.phone}</p>
                   <p><strong>Location:</strong> {profileData.location}</p>
+                  <p><strong>Occupation:</strong> {profileData.occupation}</p>
                   <p><strong>Role:</strong> {profileData.role}</p>
+                  <p><strong>Bio:</strong> {profileData.bio}</p>
                 </div>
-                <div className="w-36 h-36 rounded-full bg-gray-200 border-4 border-primary overflow-hidden">
+                <div className="w-36 h-36 rounded-full bg-gray-200 border-4 border-primary overflow-hidden hover:shadow-md hover:shadow-primary">
                   <img
-                    // src={seller.profilePicture || "/default-profile.png"}
-                    // alt={seller.name}
-                    className="w-full h-full object-cover"
+                    src={`http://localhost:5000${profileData.profilePicture}` || "/default-profile.png"}
+                    alt={profileData.name}
+                    className="w-full h-full object-cover scale-90 hover:scale-110 ease-in duration-500"
                   />
                 </div>
+              </div>
 
-              </div>
-              <div className="mt-8">
-                {/* You can open the modal using document.getElementById('ID').showModal() method */}
-                <button className="btn bg-primary hover:bg-hover text-white" onClick={()=>document.getElementById('my_modal_3').showModal()}>Edit Profile</button>
-                <dialog id="my_modal_3" className="modal">
-                  <div className="modal-box bg-primary-content">
-                    <form method="dialog">
-                      {/* if there is a button in form, it will close the modal */}
-                      <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-                    </form>
-                    <h3 className="font-bold text-lg">Hello!</h3>
-                    <p className="py-4">Press ESC key or click on ✕ button to close</p>
+              {/* Edit Profile Button and Modal */}
+          <div className="mt-8">
+            <button
+              className="btn bg-primary hover:bg-hover text-white"
+              onClick={() => document.getElementById("editProfileModal").showModal()}
+            >
+              Edit Profile
+            </button>
+            <dialog id="editProfileModal" className="modal">
+              <div className="modal-box bg-primary-content">
+                <form onSubmit={handleProfileUpdate} className="space-y-4">
+                  <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                    ✕
+                  </button>
+                  <h3 className="text-lg font-bold">Edit Profile</h3>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name || ""}
+                    onChange={handleInputChange}
+                    placeholder="Name"
+                    className="border w-full p-2 rounded"
+                  />
+                  <input
+                    type="text"
+                    name="phone"
+                    value={formData.phone || ""}
+                    onChange={handleInputChange}
+                    placeholder="Phone"
+                    className="border w-full p-2 rounded"
+                  />
+                  <input
+                    type="text"
+                    name="location"
+                    value={formData.location || ""}
+                    onChange={handleInputChange}
+                    placeholder="Location"
+                    className="border w-full p-2 rounded"
+                  />
+                  <input
+                    type="text"
+                    name="occupation"
+                    value={formData.occupation || ""}
+                    onChange={handleInputChange}
+                    placeholder="Occupation"
+                    className="border w-full p-2 rounded"
+                  />
+                  <textarea
+                    name="bio"
+                    value={formData.bio || ""}
+                    onChange={handleInputChange}
+                    placeholder="Bio"
+                    className="border w-full p-2 rounded"
+                    rows="4"
+                  ></textarea>
+                  <input
+                    type="file"
+                    name="profilePicture"
+                    onChange={handleInputChange}
+                    className="border w-full p-2 rounded"
+                    accept="image/*"
+                  />
+                  <div className="flex justify-end">
+                    <button
+                      type="submit"
+                      className="btn bg-primary hover:bg-hover text-white px-12 rounded-xl"
+                    >
+                      Save
+                    </button>
                   </div>
-                </dialog>
+                </form>
               </div>
+            </dialog>
+          </div>
               {profileData.role === "Seller" && (
                 <div className="mt-6">
                   {/* You can open the modal using document.getElementById('ID').showModal() method */}
