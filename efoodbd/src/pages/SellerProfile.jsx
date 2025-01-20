@@ -105,7 +105,7 @@ const SellerProfile = () => {
         <div className="flex items-center space-x-6">
           <div className="w-36 h-36 rounded-full bg-gray-200 border-4 border-primary overflow-hidden">
             <img
-              src={seller.profilePicture || "/default-profile.png"}
+              src={`http://localhost:5000${seller.profilePicture}` || "/default-profile.png"}
               className="w-full h-full object-cover"
               alt="Seller Profile"
             />
@@ -189,9 +189,9 @@ const SellerProfile = () => {
 
       {/* Order Modal */}
       {orderModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg max-w-md w-full">
-            <h2 className="text-lg font-bold mb-4">Order {selectedPost.title}</h2>
+        <div className="fixed inset-0 bg-primary-content bg-opacity-70 flex items-center justify-center z-50">
+          <div className="bg-primary-content p-6 rounded-lg max-w-md w-full">
+            <h2 className="text-lg text-center font-bold mb-4">Order: <span className="text-primary">{selectedPost.title}</span></h2>
             <label className="block mb-2">
               Quantity:
               <input
@@ -215,7 +215,7 @@ const SellerProfile = () => {
             </label>
             <div className="flex justify-end mt-4">
               <button
-                className="bg-gray-300 px-4 py-2 rounded mr-2"
+                className="btn px-4 py-2 rounded mr-2"
                 onClick={() => setOrderModalOpen(false)}
               >
                 Cancel

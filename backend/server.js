@@ -110,7 +110,7 @@ app.get("/api/users", (req, res) => {
 
 // Fetch all sellers
 app.get("/api/sellers", (req, res) => {
-  const query = "SELECT id, name, location, foodCategory AS category FROM sellers";
+  const query = "SELECT id, name, location, foodCategory AS category, occupation, bio, profilePicture FROM sellers";
 
   db.query(query, (err, results) => {
     if (err) {

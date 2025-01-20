@@ -60,6 +60,7 @@ const Profile = () => {
       alert("Error fetching orders: " + err.message);
     }
   };
+  
 
   const handlePostChange = (e) => {
     const { name, value, files } = e.target;
@@ -194,10 +195,10 @@ const Profile = () => {
             </button>
             <dialog id="editProfileModal" className="modal">
               <div className="modal-box bg-primary-content">
+                <form method="dialog">
+                  <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                </form>
                 <form onSubmit={handleProfileUpdate} className="space-y-4">
-                  <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-                    ✕
-                  </button>
                   <h3 className="text-lg font-bold">Edit Profile</h3>
                   <input
                     type="text"
@@ -239,6 +240,7 @@ const Profile = () => {
                     className="border w-full p-2 rounded"
                     rows="4"
                   ></textarea>
+                  <p>Upload your Profile Picture</p>
                   <input
                     type="file"
                     name="profilePicture"
@@ -338,7 +340,7 @@ const Profile = () => {
                         </div>
                       ))
                     ) : (
-                      <p>No posts yet.</p>
+                      <p>No posts yet!</p>
                     )}
                   </div>
                 </div>

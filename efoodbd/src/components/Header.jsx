@@ -35,36 +35,6 @@ const Header = () => {
         <Link to="/" className="text-3xl font-bold text-primary hover:text-hover">
           <span className="text-gold">e</span>FoodBD
         </Link>
-        
-        {/* Animated GIF in the middle */}
-        <div className="flex justify-center items-center">
-          <img
-            src="/star.png" // Path to the animated icon
-            alt="Animated Icon"
-            className="h-4 w-4" // Adjust size as needed
-          />
-          <img
-            src="/star.png" // Path to the animated icon
-            alt="Animated Icon"
-            className="h-4 w-4" // Adjust size as needed
-          />
-          <img
-            src="/star.png" // Path to the animated icon
-            alt="Animated Icon"
-            className="h-4 w-4" // Adjust size as needed
-          />
-          <img
-            src="/star.png" // Path to the animated icon
-            alt="Animated Icon"
-            className="h-4 w-4" // Adjust size as needed
-          />
-          <img
-            src="/star.png" // Path to the animated icon
-            alt="Animated Icon"
-            className="h-4 w-4" // Adjust size as needed
-          />
-        </div>
-
         <nav>
           <ul className="flex gap-6">
             {!user ? (
@@ -76,13 +46,18 @@ const Header = () => {
                 </li>
                 <li>
                   <Link to="/signup">
-                    <button className="bg-primary px-4 py-2 rounded-xl text-white font-medium hover:bg-hover">Sign Up</button>
+                    <button className="border-primary px-4 py-2 rounded-xl text-white font-medium hover:bg-hover">Sign Up</button>
                   </Link>
                 </li>
               </>
             ) : (
               <>
-                <li>
+                <li className="flex items-center gap-6">         
+                  <img
+                    src="/notification.png" // Replace with your own image
+                    alt="notification"
+                    className="h-7 w-7" // Adjust size as needed
+                  />
                   <button
                     className="bg-primary px-4 py-2 rounded-xl text-white font-medium hover:bg-hover"
                     onClick={handleProfileClick}
