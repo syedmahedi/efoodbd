@@ -53,6 +53,19 @@ const SellerProfile = () => {
   const calculateTotal = () => {
     return selectedPost.price * orderDetails.quantity;
   };
+
+  const formatDate = (isoDate) => {
+    const options = {
+      timeZone: "Asia/Dhaka",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    };
+    return new Intl.DateTimeFormat("en-BD", options).format(new Date(isoDate));
+  };
   
 
   const handleOrderSubmit = async () => {
@@ -118,6 +131,9 @@ const SellerProfile = () => {
             <p>
               <span className="font-semibold">Category:</span> {seller.foodCategory}
             </p>
+            <p>
+              <span className="font-semibold">Seller ID: </span> {seller.id}
+            </p>
           </div>
         </div>
 
@@ -125,8 +141,8 @@ const SellerProfile = () => {
         <div className="mt-6">
           <h3 className="text-primary text-2xl font-semibol">About the Seller</h3>
           <p className=" mt-3 leading-relaxed">
-            {seller.description ||
-              "No description provided. This seller has not shared details about their business yet."}
+            {seller.bio ||
+              "This seller has not shared details about their business yet."}
           </p>
         </div>
 
@@ -169,6 +185,7 @@ const SellerProfile = () => {
                           post.description
                         )}
                       </p>
+                      <p className="text-sm mt-2">{formatDate(post.created_at)}</p>
                     </div>
                     <button
                       className="mt-4 bg-primary text-white px-4 py-2 rounded-lg hover:bg-hover self-end"

@@ -105,11 +105,26 @@ const Profile = () => {
       });
       if (!response.ok) throw new Error("Failed to create food post.");
       alert("Food post created successfully!");
+      document.getElementById('my_modal_1').close();
       setNewPost({ title: "", description: "", foodImage: null,price: "" });
       fetchFoodPosts(profileData.id); // Refresh posts
     } catch (err) {
       alert("Error creating food post: " + err.message);
     }
+  };
+
+
+  const formatDate = (isoDate) => {
+    const options = {
+      timeZone: "Asia/Dhaka",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    };
+    return new Intl.DateTimeFormat("en-BD", options).format(new Date(isoDate));
   };
 
 
@@ -127,13 +142,18 @@ const Profile = () => {
     e.preventDefault();
   
     const formDataToSend = new FormData();
-    formDataToSend.append("name", formData.name || "");
-    formDataToSend.append("phone", formData.phone || "");
-    formDataToSend.append("location", formData.location || "");
+    formDataToSend.append("name", formData.name);
+    formDataToSend.append("phone", formData.phone);
+    formDataToSend.append("location", formData.location);
     formDataToSend.append("occupation", formData.occupation || "");
     formDataToSend.append("bio", formData.bio || "");
     formDataToSend.append("email", profileData.email); // Required
     formDataToSend.append("role", profileData.role); // Required
+
+    if (profileData.role === "Seller" && formData.foodCategory) {
+      formDataToSend.append("foodCategory", formData.foodCategory);
+    }
+
     if (formData.profilePicture) {
       formDataToSend.append("profilePicture", formData.profilePicture);
     }
@@ -147,6 +167,7 @@ const Profile = () => {
       if (!response.ok) throw new Error("Failed to update profile.");
       const updatedData = await response.json();
       alert("Profile updated successfully!");
+      window.location.reload();
       setProfileData(updatedData);
       document.getElementById("editProfileModal").close(); // Close modal after update
     } catch (err) {
@@ -164,26 +185,31 @@ const Profile = () => {
       <Header />
       <div className="container mx-auto py-8">
         <div className="max-w-6xl p-6 mx-auto">
-          <h2 className="text-3xl font-bold mb-6 text-primary">Profile</h2>
+          <h2 className="text-3xl font-bold mb-6 text-primary text-center lg:text-left">Profile</h2>
             <div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p><strong>Name:</strong> {profileData.name}</p>
-                  <p><strong>Email:</strong> {profileData.email}</p>
-                  <p><strong>Phone:</strong> {profileData.phone}</p>
-                  <p><strong>Location:</strong> {profileData.location}</p>
-                  <p><strong>Occupation:</strong> {profileData.occupation}</p>
-                  <p><strong>Role:</strong> {profileData.role}</p>
-                  <p><strong>Bio:</strong> {profileData.bio}</p>
-                </div>
-                <div className="w-36 h-36 rounded-full bg-gray-200 border-4 border-primary overflow-hidden hover:shadow-md hover:shadow-primary">
+            <div className="flex flex-col lg:flex-row items-center lg:justify-between">
+              {/* Profile Data */}
+              <div className="lg:w-1/2 text-center lg:text-left mb-4 lg:mb-0">
+                <p><strong>Name:</strong> {profileData.name}</p>
+                <p><strong>Email:</strong> {profileData.email}</p>
+                <p><strong>Phone:</strong> {profileData.phone}</p>
+                <p><strong>Location:</strong> {profileData.location}</p>
+                {profileData.role === "Seller" && <p><strong>Food Category:</strong> {profileData.foodCategory}</p>}
+                <p><strong>Occupation:</strong> {profileData.occupation}</p>
+                <p><strong>Role:</strong> {profileData.role}</p>
+                <p><strong>Bio:</strong> {profileData.bio}</p>
+              </div>
+              {/* Profile Picture */}
+              <div className="lg:w-1/2 flex justify-center mb-4 lg:mb-0">
+                <div className="w-40 h-40 rounded-full bg-gray-200 border-4 border-primary overflow-hidden hover:shadow-md hover:shadow-primary">
                   <img
                     src={`http://localhost:5000${profileData.profilePicture}` || "/default-profile.png"}
                     alt={profileData.name}
-                    className="w-full h-full object-cover scale-90 hover:scale-110 ease-in duration-500"
+                    className="w-full h-full object-cover scale-90 hover:scale-110 ease-in duration-500 items-center"
                   />
                 </div>
               </div>
+            </div>
 
               {/* Edit Profile Button and Modal */}
           <div className="mt-8">
@@ -224,6 +250,16 @@ const Profile = () => {
                     placeholder="Location"
                     className="border w-full p-2 rounded"
                   />
+                  {profileData.role === "Seller" && (
+                    <input
+                      type="text"
+                      name="foodCategory"
+                      value={formData.foodCategory || ""}
+                      onChange={handleInputChange}
+                      placeholder="Food Category"
+                      className="border w-full p-2 rounded"
+                    />
+                  )}
                   <input
                     type="text"
                     name="occupation"
@@ -232,11 +268,12 @@ const Profile = () => {
                     placeholder="Occupation"
                     className="border w-full p-2 rounded"
                   />
+                  
                   <textarea
                     name="bio"
                     value={formData.bio || ""}
                     onChange={handleInputChange}
-                    placeholder="Bio"
+                    placeholder="Describe yourself"
                     className="border w-full p-2 rounded"
                     rows="4"
                   ></textarea>
@@ -252,6 +289,7 @@ const Profile = () => {
                     <button
                       type="submit"
                       className="btn bg-primary hover:bg-hover text-white px-12 rounded-xl"
+                      
                     >
                       Save
                     </button>
@@ -330,6 +368,7 @@ const Profile = () => {
                             <h4 className="text-lg font-bold text-primary">{post.title}</h4>
                             <p className="text-sm mt-2">{post.description}</p>
                             <p className="text-xl mt-2 font-bold">৳{post.price}</p>
+                            <p className="text-sm mt-2">{formatDate(post.created_at)}</p>
                             <button
                                 onClick={() => handleDeletePost(post.id)}
                                 className="btn bg-red-600 text-white hover:bg-red-700 mt-4"

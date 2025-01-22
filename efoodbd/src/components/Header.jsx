@@ -46,7 +46,7 @@ const Header = () => {
                 </li>
                 <li>
                   <Link to="/signup">
-                    <button className="border-primary px-4 py-2 rounded-xl text-white font-medium hover:bg-hover">Sign Up</button>
+                    <button className="bg-primary px-4 py-2 rounded-xl text-white font-medium hover:bg-hover">Sign Up</button>
                   </Link>
                 </li>
               </>
@@ -68,7 +68,7 @@ const Header = () => {
                 <li>
                   <button
                     onClick={handleSignOut}
-                    className="bg-red-600 px-4 py-2 rounded-xl text-white font-medium hover:bg-red-600"
+                    className="bg-red-600 px-4 py-2 rounded-xl text-white font-medium hover:bg-red-800"
                   >
                     Sign Out
                   </button>

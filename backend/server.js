@@ -159,10 +159,12 @@ const upload = multer({ storage });
 
 // API Endpoint to Update Profile
 app.put("/api/profileUpdate", upload.single("profilePicture"), (req, res) => {
-  const { email, name, phone, location, occupation, bio, role } = req.body;
+  const { email, name, phone, location, occupation, bio, role, foodCategory } = req.body;
 
   if (!email || !role) {
-    return res.status(400).json({ error: "Email and role are required for profile update." });
+    return res
+      .status(400)
+      .json({ error: "Email and role are required for profile update." });
   }
 
   // Validate the role and determine the table
@@ -174,33 +176,52 @@ app.put("/api/profileUpdate", upload.single("profilePicture"), (req, res) => {
   const table = role === "Buyer" ? "buyers" : "sellers";
   const profilePicturePath = req.file ? `/uploads/${req.file.filename}` : null;
 
-  // SQL query to update the profile
-  const updateQuery = `
-    UPDATE ${table}
-    SET
-      name = ?,
-      phone = ?,
-      location = ?,
-      occupation = ?,
-      bio = ?,
-      profilePicture = ?
-    WHERE email = email
-  `;
+  // Construct the SQL query dynamically
+  let updateQuery = `UPDATE ${table} SET `;
+  const params = [];
 
-  const params = [
-    name,
-    phone,
-    location,
-    occupation || null,
-    bio || null,
-    profilePicturePath,
-    email,
-  ];
+  if (name) {
+    updateQuery += "name = ?, ";
+    params.push(name);
+  }
+  if (phone) {
+    updateQuery += "phone = ?, ";
+    params.push(phone);
+  }
+  if (location) {
+    updateQuery += "location = ?, ";
+    params.push(location);
+  }
+  if (occupation) {
+    updateQuery += "occupation = ?, ";
+    params.push(occupation);
+  }
+  if (bio) {
+    updateQuery += "bio = ?, ";
+    params.push(bio);
+  }
+  if (profilePicturePath) {
+    updateQuery += "profilePicture = ?, ";
+    params.push(profilePicturePath);
+  }
 
+  // Only include foodCategory if the user is a seller
+  if (role === "Seller" && foodCategory) {
+    updateQuery += "foodCategory = ?, ";
+    params.push(foodCategory);
+  }
+
+  // Remove trailing comma and add WHERE clause
+  updateQuery = updateQuery.replace(/, $/, " WHERE email = ?");
+  params.push(email);
+
+  // Execute the query
   db.query(updateQuery, params, (err, result) => {
     if (err) {
       console.error("Error updating profile:", err);
-      return res.status(500).json({ error: "An error occurred while updating the profile." });
+      return res
+        .status(500)
+        .json({ error: "An error occurred while updating the profile." });
     }
 
     if (result.affectedRows === 0) {
@@ -210,6 +231,8 @@ app.put("/api/profileUpdate", upload.single("profilePicture"), (req, res) => {
     res.json({ message: "Profile updated successfully!" });
   });
 });
+
+
 
 
 // Add a new post by a seller
@@ -326,6 +349,21 @@ app.delete('/api/foodPosts/:id', async (req, res) => {
       res.status(500).send({ error: 'Failed to delete post.' });
   }
 });
+
+app.post("/api/complaints", async (req, res) => {
+  const { complainant, respondent,respondent_id, description } = req.body;
+
+  try {
+    await db.query(
+      "INSERT INTO complain (complainant, respondent, respondent_id, description) VALUES (?, ?, ?, ?)",
+      [complainant, respondent, respondent_id, description]
+    );
+    res.status(201).json({ message: "Complaint submitted successfully!" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to save complaint" });
+  }
+});
+
 
 
 

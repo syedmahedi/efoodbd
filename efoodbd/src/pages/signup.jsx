@@ -58,7 +58,7 @@ const SignUp = () => {
         onSubmit={handleSignUp}
         className="bg-primary-content p-6 rounded text-primary shadow-md shadow-primary w-full max-w-md"
       >
-        <h2 className="text-2xl font-bold mb-6">Sign Up</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
         {error && <p className="text-red-500 mb-4">{error}</p>}
         
         <input
