@@ -357,21 +357,21 @@ const Profile = () => {
                       foodPosts.map((post) => (
                         <div
                           key={post.id}
-                          className="border border-gray-500 rounded shadow-md overflow-hidden bg-primary-content"
+                          className="rounded-2xl shadow-sm hover:shadow-md hover:shadow-gray-500 shadow-gray-500 overflow-hidden"
                         >
                           <img
                             src={`http://localhost:5000${post.food_image}`}
                             alt={post.title}
-                            className="w-full h-48 object-cover"
+                            className="w-full h-44 object-cover"
                           />
-                          <div className="p-4">
+                          <div className="p-4 bg-gray-900 rounded-lg">
                             <h4 className="text-lg font-bold text-primary">{post.title}</h4>
-                            <p className="text-sm mt-2">{post.description}</p>
-                            <p className="text-xl mt-2 font-bold">৳{post.price}</p>
-                            <p className="text-sm mt-2">{formatDate(post.created_at)}</p>
+                            <p className="text-sm mt-1">{post.description}</p>
+                            <p className="text-xl mt-1 font-bold">৳{post.price}</p>
+                            <p className="text-sm mt-1">{formatDate(post.created_at)}</p>
                             <button
                                 onClick={() => handleDeletePost(post.id)}
-                                className="btn bg-red-600 text-white hover:bg-red-700 mt-4"
+                                className="btn bg-red-600 text-white hover:bg-red-800 mt-4"
                             >
                                 Delete Post
                             </button>

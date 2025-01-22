@@ -118,8 +118,8 @@ const SellerProfile = () => {
         <div className="flex items-center space-x-6">
           <div className="w-36 h-36 rounded-full bg-gray-200 border-4 border-primary overflow-hidden">
             <img
-              src={`http://localhost:5000${seller.profilePicture}` || "/default-profile.png"}
-              className="w-full h-full object-cover"
+              src={seller.profilePicture ? `http://localhost:5000${seller.profilePicture}` : "/default-profile.png"}
+              className="w-full h-full object-cover scale-90 hover:scale-110 ease-in duration-500 items-center"
               alt="Seller Profile"
             />
           </div>
@@ -154,7 +154,7 @@ const SellerProfile = () => {
               {posts.map((post) => (
                 <div
                 key={post.id}
-                className="relative border border-gray-500 rounded-lg overflow-hidden group hover:shadow-md hover:shadow-gray-500 transition-all duration-300"
+                className="relative shadow-sm shadow-gray-500 rounded-lg overflow-hidden group hover:shadow-md hover:shadow-gray-500 transition-all duration-300"
               >
                 <div className="relative w-full h-48 overflow-hidden">
                   <img
@@ -162,11 +162,11 @@ const SellerProfile = () => {
                     alt={post.title}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 group-hover:blur-sm"
                   />
-                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-70 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div className="absolute inset-0 flex items-center justify-center bg-primary-content bg-opacity-60 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                     <p className="text-white text-2xl font-bold">৳{post.price} BDT</p>
                   </div>
                 </div>
-                <div className="p-4">
+                <div className="p-4 bg-gray-900 rounded-lg">
                   <div className="flex justify-between items-start">
                     <div className="max-w-[70%]">
                       <h4 className="text-lg font-bold text-primary">{post.title}</h4>

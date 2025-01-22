@@ -39,7 +39,7 @@ const Home = () => {
       </div>
       <div className="container mx-auto py-6">
         <SearchBar />
-        <h2 className="text-2xl font-bold my-6 text-primary">Featured Sellers</h2>
+        <h2 className="text-2xl font-bold my-6 text-primary">Best Sellers</h2>
         {error && <p className="text-red-500">{error}</p>}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-base-content">
           {sellers.slice(0, 3).map((seller) => (
