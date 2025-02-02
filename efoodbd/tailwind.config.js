@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        bangla: ["Tajawal", "sans-serif"],
+      },
       colors: {
         primary: '#FC8934',
         hover: '#B66326',

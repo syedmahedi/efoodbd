@@ -33,12 +33,13 @@ const Home = () => {
   return (
     <div className="bg-primary-content min-h-screen">
       <Header />
-      <div className="container mx-auto text-center">
-        <h1 className="text-5xl mt-16 text-white">
+      <div className="container mx-auto text-center px-4">
+        <h1 className="text-3xl sm:text-5xl mt-16 text-white font-bangla">
           নিজের এলাকায় গড়ে তুলুন <span className="text-primary">আপনার ব্যবসা</span>
         </h1>
-        <p className="mt-6 text-xl font-light">আপনার ঘরের বানানো খাবার পৌঁছে দিন সবার কাছে!</p>
+        <p className="mt-4 text-lg sm:text-xl font-light font-bangla">আপনার ঘরের বানানো খাবার পৌঁছে দিন সবার কাছে!</p>
       </div>
+
       <div className="container mx-auto py-6">
         <SearchBar />
         <h2 className="text-2xl font-bold my-6 text-primary">Best Sellers</h2>

@@ -236,7 +236,7 @@ const Profile = () => {
                     value={formData.name || ""}
                     onChange={handleInputChange}
                     placeholder="Name"
-                    className="border w-full p-2 rounded"
+                    className="w-full p-2 rounded"
                   />
                   <input
                     type="text"
@@ -244,7 +244,7 @@ const Profile = () => {
                     value={formData.phone || ""}
                     onChange={handleInputChange}
                     placeholder="Phone"
-                    className="border w-full p-2 rounded"
+                    className="w-full p-2 rounded"
                   />
                   <input
                     type="text"
@@ -252,7 +252,7 @@ const Profile = () => {
                     value={formData.location || ""}
                     onChange={handleInputChange}
                     placeholder="Location"
-                    className="border w-full p-2 rounded"
+                    className="w-full p-2 rounded"
                   />
                   {profileData.role === "Seller" && (
                     <input
@@ -261,7 +261,7 @@ const Profile = () => {
                       value={formData.foodCategory || ""}
                       onChange={handleInputChange}
                       placeholder="Food Category"
-                      className="border w-full p-2 rounded"
+                      className="w-full p-2 rounded"
                     />
                   )}
                   <input
@@ -270,7 +270,7 @@ const Profile = () => {
                     value={formData.occupation || ""}
                     onChange={handleInputChange}
                     placeholder="Occupation"
-                    className="border w-full p-2 rounded"
+                    className="w-full p-2 rounded"
                   />
                   
                   <textarea
@@ -278,7 +278,7 @@ const Profile = () => {
                     value={formData.bio || ""}
                     onChange={handleInputChange}
                     placeholder="Describe yourself"
-                    className="border w-full p-2 rounded"
+                    className="w-full p-2 rounded"
                     rows="4"
                   ></textarea>
                   <p>Upload your Profile Picture</p>
@@ -286,7 +286,7 @@ const Profile = () => {
                     type="file"
                     name="profilePicture"
                     onChange={handleInputChange}
-                    className="border w-full p-2 rounded"
+                    className="w-full p-2 rounded"
                     accept="image/*"
                   />
                   <div className="flex justify-end">
@@ -319,21 +319,21 @@ const Profile = () => {
                       placeholder="Title"
                       value={newPost.title}
                       onChange={handlePostChange}
-                      className="border border-gray-600 w-full p-2 rounded"
+                      className="w-full p-2 rounded"
                     />
                     <textarea
                       name="description"
                       placeholder="Description"
                       value={newPost.description}
                       onChange={handlePostChange}
-                      className="border border-gray-600 w-full p-2 rounded"
+                      className="w-full p-2 rounded"
                       rows="4"
                     ></textarea>
                     <input
                       type="file"
                       name="foodImage"
                       onChange={handlePostChange}
-                      className="border border-gray-600 w-full p-2 rounded"
+                      className="w-full p-2 rounded"
                       accept="image/*"
                     />
                     <input
@@ -342,7 +342,7 @@ const Profile = () => {
                       placeholder="Price (in BDT)"
                       value={newPost.price}
                       onChange={handlePostChange}
-                      className="border border-gray-600 w-full p-2 rounded"
+                      className="w-full p-2 rounded"
                     />
                     <div className="flex justify-end">
                       <button

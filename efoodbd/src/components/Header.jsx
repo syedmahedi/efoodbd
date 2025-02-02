@@ -116,19 +116,19 @@ const Header = () => {
 
       {/* Modal for Orders */}
       <dialog id="order_modal" className="modal modal-bottom sm:modal-middle">
-        <div className="modal-box">
-          <h2 className="font-bold text-lg text-primary">Your Orders</h2>
-          <div className="max-h-60 overflow-y-auto mt-4">
+        <div className="modal-box bg-primary-content">
+          <h2 className="font-bold text-xl text-primary text-center">Your Orders</h2>
+          <div className="max-h-60 overflow-y-auto mt-2">
             {orders.length > 0 ? (
               <ul>
                 {orders.map((order, index) => (
                   <li key={index} className="border-b py-2">
-                    <p className="text-sm"><b>Buyer:</b> {order.buyerName}, {order.buyerLocation}</p>
-                    <p className="text-sm"><b>Contact:</b> {order.contact}</p>
-                    <p className="text-sm"><b>Item:</b> {order.orderedItem}</p>
-                    <p className="text-sm"><b>Quantity:</b> {order.quantity}</p>
-                    <p className="text-sm"><b>Total Price:</b> {order.total_price}</p>
-                    <p className="text-sm"><b>Date:</b> {formatDate(order.order_date)}</p>
+                    <h1 className="text-lg text-primary font-bold">{index+1}. {order.orderedItem}</h1>
+                    <p className="text-sm mt-2"><b>Buyer:</b> {order.buyerName} | {order.buyerLocation}</p>
+                    <p className="text-sm mt-1"><b>Contact:</b> {order.contact}</p>
+                    <p className="text-sm mt-1"><b>Quantity:</b> {order.quantity}</p>
+                    <p className="text-sm mt-1"><b>Total Price:</b> ৳{order.total_price} BDT</p>
+                    <p className="text-sm mt-1 mb-1"><b>Date:</b> {formatDate(order.order_date)}</p>
                   </li>
                 ))}
               </ul>
