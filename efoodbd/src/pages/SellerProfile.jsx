@@ -110,6 +110,8 @@ const SellerProfile = () => {
     return <p className="text-center mt-6">Loading...</p>;
   }
 
+
+
   return (
     <div className="bg-primary-content min-h-screen">
       <Header />
@@ -208,7 +210,7 @@ const SellerProfile = () => {
       {orderModalOpen && (
         <div className="fixed inset-0 bg-primary-content bg-opacity-70 flex items-center justify-center z-50">
           <div className="bg-primary-content p-6 rounded-lg max-w-md w-full">
-            <h2 className="text-lg text-center font-bold mb-4">Order: <span className="text-primary">{selectedPost.title}</span></h2>
+            <h2 className="text-lg text-center font-bold">Order: <span className="text-primary">{selectedPost.title}</span></h2>
             <label className="block mb-2">
               Quantity:
               <input
@@ -230,6 +232,9 @@ const SellerProfile = () => {
                 className="w-full mt-1 p-2 border rounded"
               />
             </label>
+            <h2 className="block mt-4 font-bold">
+              Total Price:<span className="text-primary"> ৳{calculateTotal()} BDT</span>
+            </h2>
             <div className="flex justify-end mt-4">
               <button
                 className="btn px-4 py-2 rounded mr-2"

@@ -11,9 +11,12 @@ const Profile = () => {
   const navigate = useNavigate();
   
 
-
   useEffect(() => {
     const email = localStorage.getItem("userEmail");
+
+    if (profileData?.id) {
+      localStorage.setItem("userId", profileData.id);  // Save user ID in localStorage
+    }
 
     if (!email) {
       alert("User is not logged in!");
@@ -37,7 +40,7 @@ const Profile = () => {
     };
 
     fetchProfileData();
-  }, [navigate]);
+  }, [navigate, profileData?.id]);
 
   const fetchFoodPosts = async (sellerId) => {
     try {
@@ -52,7 +55,7 @@ const Profile = () => {
 
   const fetchOrders = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/sellers/${profileData.id}/orders`);
+      const response = await fetch(`http://localhost:5000/api/sellersOrders`);
       if (!response.ok) throw new Error("Failed to fetch orders.");
       const ordersData = await response.json();
       setOrders(ordersData);
@@ -178,7 +181,7 @@ const Profile = () => {
 
 
   if (error) return <p className="text-red-500">Error: {error}</p>;
-  if (!profileData) return <p>Loading...</p>;
+  if (!profileData) return <div className="flex justify-center mt-12"><span className="loading loading-dots loading-md"></span>;</div>
 
   return (
     <div className="bg-primary-content min-h-screen">
@@ -193,6 +196,7 @@ const Profile = () => {
                 <p><strong>Name:</strong> {profileData.name}</p>
                 <p><strong>Email:</strong> {profileData.email}</p>
                 <p><strong>Phone:</strong> {profileData.phone}</p>
+                <p><strong>Your ID:</strong> {profileData.id}</p>
                 <p><strong>Location:</strong> {profileData.location}</p>
                 {profileData.role === "Seller" && <p><strong>Food Category:</strong> {profileData.foodCategory}</p>}
                 <p><strong>Occupation:</strong> {profileData.occupation}</p>

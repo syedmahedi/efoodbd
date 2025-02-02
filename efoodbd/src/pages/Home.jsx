@@ -3,6 +3,8 @@ import Header from "../components/Header";
 import SearchBar from "../components/SearchBar";
 import SellerCard from "../components/SellerCard";
 import ComplaintModal from "../components/ComplaintModal";
+import Footer from "../components/Footer";
+
 
 const Home = () => {
   const [sellers, setSellers] = useState([]);
@@ -32,10 +34,10 @@ const Home = () => {
     <div className="bg-primary-content min-h-screen">
       <Header />
       <div className="container mx-auto text-center">
-        <h1 className="text-5xl mt-12 text-white">
+        <h1 className="text-5xl mt-16 text-white">
           নিজের এলাকায় গড়ে তুলুন <span className="text-primary">আপনার ব্যবসা</span>
         </h1>
-        <p className="mt-5">আপনার ঘরের বানানো খাবার পৌঁছে দিন সবার কাছে !</p>
+        <p className="mt-6 text-xl font-light">আপনার ঘরের বানানো খাবার পৌঁছে দিন সবার কাছে!</p>
       </div>
       <div className="container mx-auto py-6">
         <SearchBar />
@@ -63,9 +65,9 @@ const Home = () => {
           </button>
         </div>
       </div>
-
       {/* Modal */}
       {isModalOpen && <ComplaintModal onClose={toggleModal} />}
+      <Footer />
     </div>
   );
 };

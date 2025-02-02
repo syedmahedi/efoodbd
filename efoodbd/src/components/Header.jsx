@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { auth } from "../firebase";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Header = () => {
   const [user, setUser] = useState(null);
+  const [orders, setOrders] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,9 +19,37 @@ const Header = () => {
   const handleSignOut = async () => {
     try {
       await signOut(auth);
+      localStorage.removeItem("userEmail");
+      localStorage.removeItem("userId");
       alert("You have successfully signed out.");
+      navigate("/");
     } catch (error) {
       console.error("Error signing out:", error);
+    }
+  };
+
+  const fetchOrders = async () => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      alert("User ID not found. Cannot fetch orders.");
+      return;
+    }
+
+    try {
+      console.log("Fetching orders for userId:", userId);
+      const response = await axios.get("http://localhost:5000/api/sellerOrders", { params: { userId } });
+
+      console.log("API Response:", response.data);
+      if (response.data && response.data.orders) {
+        setOrders(response.data.orders);
+        document.getElementById("order_modal").showModal(); // Open modal
+      } else {
+        console.error("Unexpected API response:", response.data);
+        alert("Failed to fetch orders. Please try again later.");
+      }
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+      alert("An error occurred while fetching orders.");
     }
   };
 
@@ -29,8 +59,21 @@ const Header = () => {
     }
   };
 
+  const formatDate = (isoDate) => {
+    const options = {
+      timeZone: "Asia/Dhaka",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    };
+    return new Intl.DateTimeFormat("en-BD", options).format(new Date(isoDate));
+  };
+
   return (
-    <header className="bg-primary-content py-4 px-2">
+    <header className="py-4 px-2">
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/" className="text-3xl font-bold text-primary hover:text-hover">
           <span className="text-gold">e</span>FoodBD
@@ -52,24 +95,16 @@ const Header = () => {
               </>
             ) : (
               <>
-                <li className="flex items-center gap-6">         
-                  <img
-                    src="/notification.png" // Replace with your own image
-                    alt="notification"
-                    className="h-7 w-7" // Adjust size as needed
-                  />
-                  <button
-                    className="bg-primary px-4 py-2 rounded-xl text-white font-medium hover:bg-hover"
-                    onClick={handleProfileClick}
-                  >
+                <li className="flex items-center gap-6">
+                  <button onClick={fetchOrders}>
+                    <img src="/notification.png" alt="notification" className="h-7 w-7 cursor-pointer" />
+                  </button>
+                  <button className="bg-primary px-4 py-2 rounded-xl text-white font-medium hover:bg-hover" onClick={handleProfileClick}>
                     My Profile
                   </button>
                 </li>
                 <li>
-                  <button
-                    onClick={handleSignOut}
-                    className="bg-red-600 px-4 py-2 rounded-xl text-white font-medium hover:bg-red-800"
-                  >
+                  <button onClick={handleSignOut} className="bg-red-600 px-4 py-2 rounded-xl text-white font-medium hover:bg-red-800">
                     Sign Out
                   </button>
                 </li>
@@ -78,6 +113,36 @@ const Header = () => {
           </ul>
         </nav>
       </div>
+
+      {/* Modal for Orders */}
+      <dialog id="order_modal" className="modal modal-bottom sm:modal-middle">
+        <div className="modal-box">
+          <h2 className="font-bold text-lg text-primary">Your Orders</h2>
+          <div className="max-h-60 overflow-y-auto mt-4">
+            {orders.length > 0 ? (
+              <ul>
+                {orders.map((order, index) => (
+                  <li key={index} className="border-b py-2">
+                    <p className="text-sm"><b>Buyer:</b> {order.buyerName}, {order.buyerLocation}</p>
+                    <p className="text-sm"><b>Contact:</b> {order.contact}</p>
+                    <p className="text-sm"><b>Item:</b> {order.orderedItem}</p>
+                    <p className="text-sm"><b>Quantity:</b> {order.quantity}</p>
+                    <p className="text-sm"><b>Total Price:</b> {order.total_price}</p>
+                    <p className="text-sm"><b>Date:</b> {formatDate(order.order_date)}</p>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No orders found.</p>
+            )}
+          </div>
+          <div className="modal-action">
+            <form method="dialog">
+              <button className="mt-4 bg-red-600 px-4 py-2 rounded-xl text-white font-medium hover:bg-red-800">Close</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
     </header>
   );
 };

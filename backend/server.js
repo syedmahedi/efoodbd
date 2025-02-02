@@ -340,6 +340,42 @@ app.post("/api/orders", (req, res) => {
 
 
 
+app.get("/api/sellerOrders", (req, res) => {
+  const { userId } = req.query; // Fetch seller_id from query parameters
+
+  if (!userId) {
+    return res.status(400).json({ error: "Seller ID is required." });
+  }
+
+  const query = `
+    SELECT 
+      o.id AS orderId,
+      o.orderedItem,
+      o.quantity,
+      o.contact,
+      o.total_price,
+      o.order_date,
+      COALESCE(b.name, s.name) AS buyerName,  
+      COALESCE(b.location, s.location) AS buyerLocation
+    FROM orders o
+    LEFT JOIN buyers b ON o.buyer_email = b.email
+    LEFT JOIN sellers s ON o.buyer_email = s.email
+    WHERE o.seller_id = ?
+    ORDER BY o.order_date DESC;
+  `;
+
+  db.query(query, [userId], (err, results) => {
+    if (err) {
+      console.error("Error fetching orders:", err);
+      return res.status(500).json({ error: "Failed to fetch orders." });
+    }
+
+    res.json({ orders: results });
+  });
+});
+
+
+
 
 
 
@@ -368,6 +404,35 @@ app.post("/api/complaints", async (req, res) => {
     res.status(500).json({ error: "Failed to save complaint" });
   }
 });
+
+
+
+//check email
+app.get("/api/check-email", (req, res) => {
+  const email = req.query.email;
+  if (!email || !isValidEmail(email)) {
+    return res.status(400).json({ error: "Email is not valid." });
+  }
+
+  // Check if the email exists in your database
+  const emailExists = checkEmailInDatabase(email); // Replace with your database logic
+  if (!emailExists) {
+    return res.status(404).json({ error: "Email does not exist." });
+  }
+
+  return res.status(200).json({ message: "Email is valid and exists." });
+});
+
+const isValidEmail = (email) => {
+  // Simple email validation regex
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
+
+const checkEmailInDatabase = (email) => {
+  // Replace this with your actual database query
+  const existingEmails = ["test@example.com", "user@example.com"];
+  return existingEmails.includes(email);
+};
 
 
 
