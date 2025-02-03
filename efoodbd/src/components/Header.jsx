@@ -3,10 +3,13 @@ import { auth } from "../firebase";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { FiMenu } from "react-icons/fi";
+import { motion } from "framer-motion";
 
 const Header = () => {
   const [user, setUser] = useState(null);
   const [orders, setOrders] = useState([]);
+  const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -74,22 +77,28 @@ const Header = () => {
 
   return (
     <header className="py-4 px-2">
-      <div className="container mx-auto flex justify-between items-center">
+      <div className="container mx-auto flex justify-between items-center relative">
         <Link to="/" className="text-3xl font-bold text-primary hover:text-hover">
           <span className="text-gold">e</span>FoodBD
         </Link>
-        <nav>
+
+        {/* Desktop Menu */}
+        <nav className="hidden sm:flex">
           <ul className="flex gap-6">
             {!user ? (
               <>
                 <li>
                   <Link to="/signin">
-                    <button className="bg-primary px-4 py-2 rounded-xl text-white font-medium hover:bg-hover">Sign In</button>
+                    <button className="bg-primary px-4 py-2 rounded-xl text-white font-medium hover:bg-hover">
+                      Sign In
+                    </button>
                   </Link>
                 </li>
                 <li>
                   <Link to="/signup">
-                    <button className="bg-primary px-4 py-2 rounded-xl text-white font-medium hover:bg-hover">Sign Up</button>
+                    <button className="bg-primary px-4 py-2 rounded-xl text-white font-medium hover:bg-hover">
+                      Sign Up
+                    </button>
                   </Link>
                 </li>
               </>
@@ -112,6 +121,55 @@ const Header = () => {
             )}
           </ul>
         </nav>
+
+        {/* Three-dot Mobile Menu */}
+        <button className="sm:hidden text-2xl text-primary" onClick={() => setMenuOpen(!menuOpen)}>
+          <FiMenu />
+        </button>
+
+        {/* Mobile Dropdown */}
+        {menuOpen && (
+          <nav className="sm:hidden absolute top-12 right-4 bg-primary-content shadow-lg rounded-md p-6 mb-4">
+            <ul className="flex flex-col gap-6 text-center">
+              {!user ? (
+                <>
+                  <li>
+                    <Link to="/signin">
+                      <button className="w-full bg-primary px-4 py-2 rounded-xl text-white font-medium hover:bg-hover">
+                        Sign In
+                      </button>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/signup">
+                      <button className="w-full bg-primary px-4 py-2 rounded-xl text-white font-medium hover:bg-hover">
+                        Sign Up
+                      </button>
+                    </Link>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>
+                    <button onClick={fetchOrders}>
+                      <img src="/notification.png" alt="notification" className="h-7 w-7 mx-auto cursor-pointer" />
+                    </button>
+                  </li>
+                  <li>
+                    <button className="w-full bg-primary px-4 py-2 rounded-xl text-white font-medium hover:bg-hover" onClick={handleProfileClick}>
+                      My Profile
+                    </button>
+                  </li>
+                  <li>
+                    <button onClick={handleSignOut} className="w-full bg-red-600 px-4 py-2 rounded-xl text-white font-medium hover:bg-red-800">
+                      Sign Out
+                    </button>
+                  </li>
+                </>
+              )}
+            </ul>
+          </nav>
+        )}
       </div>
 
       {/* Modal for Orders */}

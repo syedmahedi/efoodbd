@@ -34,10 +34,10 @@ const Home = () => {
     <div className="bg-primary-content min-h-screen">
       <Header />
       <div className="container mx-auto text-center px-4">
-        <h1 className="text-3xl sm:text-5xl mt-16 text-white font-bangla">
+        <h1 className="text-3xl mt-8 sm:text-5xl sm:mt-24 text-white font-bangla leading-relaxed">
           নিজের এলাকায় গড়ে তুলুন <span className="text-primary">আপনার ব্যবসা</span>
         </h1>
-        <p className="mt-4 text-lg sm:text-xl font-light font-bangla">আপনার ঘরের বানানো খাবার পৌঁছে দিন সবার কাছে!</p>
+        <p className="mt-4 text-lg sm:text-xl font-light font-bangla">আপনার ঘরের বানানো খাবার পৌঁছে দিন সবার কাছে !</p>
       </div>
 
       <div className="container mx-auto py-6">

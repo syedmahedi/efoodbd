@@ -17,7 +17,7 @@ const Footer = () => {
                     <FontAwesomeIcon icon={faInstagram} />
                 </a>
             </div>
-            <p className="mt-2 text-gray-400">Connecting home chefs with food lovers.</p>
+            <p className="mt-2 text-gray-400">Connecting Home Chefs with Food Lovers</p>
           </div>
         <div className="text-center text-gray-500 text-sm pt-2">
           &copy; {new Date().getFullYear()} eFoodBD. All rights reserved.

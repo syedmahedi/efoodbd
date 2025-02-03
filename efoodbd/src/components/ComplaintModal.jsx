@@ -41,7 +41,7 @@ const ComplaintModal = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-primary-content bg-opacity-70 flex items-center justify-center">
-      <div className="bg-primary-content p-6 rounded-lg shadow-lg w-96">
+      <div className="bg-primary-content p-6 rounded-lg shadow-sm w-96 shadow-primary">
         <h2 className="text-2xl text-center text-primary font-bold mb-4">Submit a Complaint</h2>
         {error && <p className="text-red-500">{error}</p>}
         <form onSubmit={handleSubmit}>
@@ -55,7 +55,7 @@ const ComplaintModal = ({ onClose }) => {
               name="complainant"
               value={formData.complainant}
               onChange={handleChange}
-              className="w-full px-3 py-2 border rounded-lg"
+              className="w-full px-3 py-2 rounded-lg"
               required
             />
           </div>
@@ -69,7 +69,7 @@ const ComplaintModal = ({ onClose }) => {
               name="respondent"
               value={formData.respondent}
               onChange={handleChange}
-              className="w-full px-3 py-2 border rounded-lg"
+              className="w-full px-3 py-2 rounded-lg"
               required
             />
           </div>
@@ -83,11 +83,11 @@ const ComplaintModal = ({ onClose }) => {
               name="respondent_id"
               value={formData.respondent_id}
               onChange={handleChange}
-              className="w-full px-3 py-2 border rounded-lg"
+              className="w-full px-3 py-2 rounded-lg"
               required
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-4 py-4">
             <label className="block text-sm font-medium mb-1" htmlFor="description">
               Complaint Description
             </label>
@@ -96,7 +96,7 @@ const ComplaintModal = ({ onClose }) => {
               name="description"
               value={formData.description}
               onChange={handleChange}
-              className="w-full px-3 py-2 border rounded-lg"
+              className="w-full px-3 py-2 rounded-lg"
               rows="4"
               required
             />
@@ -105,11 +105,11 @@ const ComplaintModal = ({ onClose }) => {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-gray-300 text-black rounded-lg mr-2"
+              className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded-lg mr-2"
             >
               Cancel
             </button>
-            <button type="submit" className="px-4 py-2 bg-primary text-white rounded-lg">
+            <button type="submit" className="px-4 py-2 bg-primary hover:bg-hover text-white rounded-lg font-semibold">
               Submit
             </button>
           </div>

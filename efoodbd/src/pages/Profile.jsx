@@ -188,12 +188,11 @@ const Profile = () => {
       <Header />
       <div className="container mx-auto py-8">
         <div className="max-w-6xl p-6 mx-auto">
-          <h2 className="text-3xl font-bold mb-6 text-primary text-center lg:text-left">Profile</h2>
+          <h2 className="text-3xl font-bold mb-4 text-primary text-center lg:text-left"><h1>{profileData.name}</h1></h2>
             <div>
             <div className="flex flex-col lg:flex-row items-center lg:justify-between">
               {/* Profile Data */}
               <div className="lg:w-1/2 text-center lg:text-left mb-4 lg:mb-0">
-                <p><strong>Name:</strong> {profileData.name}</p>
                 <p><strong>Email:</strong> {profileData.email}</p>
                 <p><strong>Phone:</strong> {profileData.phone}</p>
                 <p><strong>Your ID:</strong> {profileData.id}</p>
@@ -224,7 +223,7 @@ const Profile = () => {
               Edit Profile
             </button>
             <dialog id="editProfileModal" className="modal">
-              <div className="modal-box bg-primary-content">
+              <div className="modal-box bg-primary-content shadow-sm shadow-primary">
                 <form method="dialog">
                   <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                 </form>
@@ -304,12 +303,10 @@ const Profile = () => {
           </div>
               {profileData.role === "Seller" && (
                 <div className="mt-6">
-                  {/* You can open the modal using document.getElementById('ID').showModal() method */}
                   <button className="btn bg-primary text-white hover:bg-hover" onClick={()=>document.getElementById('my_modal_1').showModal()}>Create Post</button>
                   <dialog id="my_modal_1" className="modal">
-                    <div className="modal-box bg-primary-content">
+                    <div className="modal-box bg-primary-content shadow-sm shadow-primary">
                       <form method="dialog">
-                        {/* if there is a button in form, it will close the modal */}
                         <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                       </form>
                       <form onSubmit={handlePostSubmit} className="space-y-4 mt-8">
@@ -329,11 +326,12 @@ const Profile = () => {
                       className="w-full p-2 rounded"
                       rows="4"
                     ></textarea>
+                    <p>Upload Your Food Image</p>
                     <input
                       type="file"
                       name="foodImage"
                       onChange={handlePostChange}
-                      className="w-full p-2 rounded"
+                      className="w-full rounded"
                       accept="image/*"
                     />
                     <input
