@@ -16,6 +16,7 @@ const Profile = () => {
 
     if (profileData?.id) {
       localStorage.setItem("userId", profileData.id);  // Save user ID in localStorage
+      localStorage.setItem("role", profileData.role);  // Save user role in localStorage
     }
 
     if (!email) {
@@ -53,16 +54,6 @@ const Profile = () => {
     }
   };
 
-  const fetchOrders = async () => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/sellersOrders`);
-      if (!response.ok) throw new Error("Failed to fetch orders.");
-      const ordersData = await response.json();
-      setOrders(ordersData);
-    } catch (err) {
-      alert("Error fetching orders: " + err.message);
-    }
-  };
   
 
   const handlePostChange = (e) => {
@@ -178,7 +169,6 @@ const Profile = () => {
     }
   };
   
-
 
   if (error) return <p className="text-red-500">Error: {error}</p>;
   if (!profileData) return <div className="flex justify-center mt-12"><span className="loading loading-dots loading-md"></span>;</div>

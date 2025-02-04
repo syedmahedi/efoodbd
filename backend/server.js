@@ -109,17 +109,56 @@ app.get("/api/users", (req, res) => {
 });
 
 // Fetch all sellers
-app.get("/api/sellers", (req, res) => {
-  const query = "SELECT id, name, location, foodCategory AS category, occupation, bio, profilePicture FROM sellers";
+app.get("/api/sellers/search", (req, res) => {
+  const category = req.query.category;
 
-  db.query(query, (err, results) => {
+  if (!category) {
+    // If no category is provided, return all sellers
+    db.query("SELECT * FROM sellers", (err, sellers) => {
+      if (err) {
+        console.error("Error fetching sellers:", err);
+        return res.status(500).json({ message: "Database error" });
+      }
+      res.json(sellers);
+    });
+    return;
+  }
+
+  // Step 1: Search sellers by their food category
+  const sellerQuery = "SELECT * FROM sellers WHERE foodCategory LIKE ?";
+  db.query(sellerQuery, [`%${category}%`], (err, sellersFromSellers) => {
     if (err) {
       console.error("Error fetching sellers:", err);
-      return res.status(500).json({ error: "Failed to fetch sellers" });
+      return res.status(500).json({ message: "Database error" });
     }
-    res.json(results); // Send sellers' data
+
+    // Step 2: Search food_posts to find sellers selling this food
+    const foodQuery = `
+      SELECT DISTINCT sellers.* 
+      FROM food_posts 
+      JOIN sellers ON food_posts.seller_id = sellers.id 
+      WHERE food_posts.title LIKE ?`;
+
+    db.query(foodQuery, [`%${category}%`], (err, sellersFromFoodPosts) => {
+      if (err) {
+        console.error("Error fetching food posts:", err);
+        return res.status(500).json({ message: "Database error" });
+      }
+
+      // Merge results and remove duplicate sellers (same seller.id)
+      const allSellers = [...sellersFromSellers, ...sellersFromFoodPosts];
+
+      // Use an object to ensure unique sellers
+      const uniqueSellers = {};
+      allSellers.forEach((seller) => {
+        uniqueSellers[seller.id] = seller;
+      });
+
+      res.json(Object.values(uniqueSellers)); // Send unique sellers list
+    });
   });
 });
+
 
 
 // Fetch seller details by ID
@@ -155,7 +194,17 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  limits: { fileSize: 2 * 1024 * 1024 }, // 2MB max
+  fileFilter: (req, file, cb) => {
+    if (!file.mimetype.startsWith("image/")) {
+      return cb(new Error("Only images are allowed"), false);
+    }
+    cb(null, true);
+  },
+});
+
 
 // API Endpoint to Update Profile
 app.put("/api/profileUpdate", upload.single("profilePicture"), (req, res) => {
@@ -261,6 +310,8 @@ app.post("/api/foodPosts", upload.single("foodImage"), (req, res) => {
     res.json({ message: "Food post created successfully!", postId: result.insertId });
   });
 });
+  
+
 
 // Get all posts by a seller
 app.get("/api/sellers/:id/posts", (req, res) => {
@@ -406,33 +457,38 @@ app.post("/api/complaints", async (req, res) => {
 });
 
 
+// Search Sellers by Food Category
+app.get("/api/search-sellers", (req, res) => {
+  const { category } = req.query;
 
-//check email
-app.get("/api/check-email", (req, res) => {
-  const email = req.query.email;
-  if (!email || !isValidEmail(email)) {
-    return res.status(400).json({ error: "Email is not valid." });
+  if (!category) {
+    return res.status(400).json({ error: "Food category is required" });
   }
 
-  // Check if the email exists in your database
-  const emailExists = checkEmailInDatabase(email); // Replace with your database logic
-  if (!emailExists) {
-    return res.status(404).json({ error: "Email does not exist." });
-  }
+  const query = `
+    SELECT id, name, location, foodCategory AS category, occupation, bio, profilePicture
+    FROM sellers
+    WHERE foodCategory LIKE ?
+  `;
 
-  return res.status(200).json({ message: "Email is valid and exists." });
+  db.query(query, [`%${category}%`], (err, results) => {
+    if (err) {
+      console.error("Error fetching sellers:", err);
+      return res.status(500).json({ error: "Failed to fetch sellers" });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: "No sellers found for this category" });
+    }
+
+    res.json(results);
+  });
 });
 
-const isValidEmail = (email) => {
-  // Simple email validation regex
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-};
 
-const checkEmailInDatabase = (email) => {
-  // Replace this with your actual database query
-  const existingEmails = ["test@example.com", "user@example.com"];
-  return existingEmails.includes(email);
-};
+
+
+
 
 
 

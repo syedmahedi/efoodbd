@@ -24,6 +24,7 @@ const Header = () => {
       await signOut(auth);
       localStorage.removeItem("userEmail");
       localStorage.removeItem("userId");
+      localStorage.removeItem("role");
       alert("You have successfully signed out.");
       navigate("/");
     } catch (error) {
@@ -75,6 +76,8 @@ const Header = () => {
     return new Intl.DateTimeFormat("en-BD", options).format(new Date(isoDate));
   };
 
+  const role = localStorage.getItem("role");
+
   return (
     <header className="py-4 px-2">
       <div className="container mx-auto flex justify-between items-center relative">
@@ -103,11 +106,13 @@ const Header = () => {
                 </li>
               </>
             ) : (
-              <>
+              <>               
                 <li className="flex items-center gap-6">
+                  {role === "Seller" && (
                   <button onClick={fetchOrders}>
                     <img src="/notification.png" alt="notification" className="h-7 w-7 cursor-pointer" />
                   </button>
+                  )}
                   <button className="bg-primary px-4 py-2 rounded-xl text-white font-medium hover:bg-hover" onClick={handleProfileClick}>
                     My Profile
                   </button>

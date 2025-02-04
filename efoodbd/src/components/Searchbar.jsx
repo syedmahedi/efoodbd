@@ -1,11 +1,12 @@
-// src/components/SearchBar.jsx
 import React, { useState } from "react";
 
-const SearchBar = () => {
-  const [query, setQuery] = useState("");
+const SearchBar = ({ onSearch }) => {
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const handleSearch = () => {
-    alert(`Searching for: ${query}`);
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    onSearch(value); // Call fetch function in Home.jsx
   };
 
   return (
@@ -13,9 +14,9 @@ const SearchBar = () => {
       <input
         type="text"
         className="flex-grow px-4 py-2 border border-gray-500 rounded-lg focus:outline-none"
-        placeholder="Search by location or category..."
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        value={searchTerm}
+        onChange={handleSearch}
+        placeholder="Search by food category..."
       />
       <button
         onClick={handleSearch}
