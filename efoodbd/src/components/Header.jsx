@@ -4,7 +4,6 @@ import { signOut, onAuthStateChanged } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FiMenu } from "react-icons/fi";
-import { motion } from "framer-motion";
 
 const Header = () => {
   const [user, setUser] = useState(null);
@@ -25,7 +24,6 @@ const Header = () => {
       localStorage.removeItem("userEmail");
       localStorage.removeItem("userId");
       localStorage.removeItem("role");
-      alert("You have successfully signed out.");
       navigate("/");
     } catch (error) {
       console.error("Error signing out:", error);
@@ -35,7 +33,7 @@ const Header = () => {
   const fetchOrders = async () => {
     const userId = localStorage.getItem("userId");
     if (!userId) {
-      alert("User ID not found. Cannot fetch orders.");
+      alert("User ID not found.");
       return;
     }
 
@@ -49,7 +47,7 @@ const Header = () => {
         document.getElementById("order_modal").showModal(); // Open modal
       } else {
         console.error("Unexpected API response:", response.data);
-        alert("Failed to fetch orders. Please try again later.");
+        alert("Failed to fetch orders.");
       }
     } catch (error) {
       console.error("Error fetching orders:", error);
@@ -81,9 +79,12 @@ const Header = () => {
   return (
     <header className="py-4 px-2">
       <div className="container mx-auto flex justify-between items-center relative">
-        <Link to="/" className="text-3xl font-bold text-primary hover:text-hover">
-          <span className="text-gold">e</span>FoodBD
-        </Link>
+      <Link to="/" className="relative text-3xl font-bold text-primary hover:text-hover">
+        HomeFood
+        <span className="absolute -top-1.5 -right-6 text-[12px] font-bold  text-white px-1">
+          BD
+        </span>
+      </Link>
 
         {/* Desktop Menu */}
         <nav className="hidden sm:flex">
@@ -118,9 +119,26 @@ const Header = () => {
                   </button>
                 </li>
                 <li>
-                  <button onClick={handleSignOut} className="bg-red-600 px-4 py-2 rounded-xl text-white font-medium hover:bg-red-800">
+                  {/* Open the modal using document.getElementById('ID').showModal() method */}
+                  <button className="bg-red-600 px-4 py-2 rounded-xl text-white font-medium hover:bg-red-800" 
+                    onClick={() => document.getElementById('signout_modal').showModal()}>
                     Sign Out
                   </button>
+                  <dialog id="signout_modal" className="modal modal-bottom sm:modal-middle bg-black bg-opacity-50">
+                    <div className="modal-box bg-primary-content rounded-lg">
+                      <h3 className="font-bold text-lg text-center">Are you sure you want to sign out?</h3>
+                      <div className="modal-action flex justify-center gap-4">
+                        <form method="dialog">
+                          <button className="bg-gray-200 px-6 py-2 rounded-xl text-black font-medium hover:bg-gray-400">No</button>
+                        </form>
+                        <button 
+                          onClick={handleSignOut} 
+                          className="bg-red-600 px-6 py-2 rounded-xl text-white font-medium hover:bg-red-800">
+                          Yes
+                        </button>
+                      </div>
+                    </div>
+                  </dialog>
                 </li>
               </>
             )}
@@ -179,7 +197,7 @@ const Header = () => {
 
       {/* Modal for Orders */}
       <dialog id="order_modal" className="modal modal-bottom sm:modal-middle">
-        <div className="modal-box bg-primary-content">
+        <div className="modal-box bg-primary-content shadow-sm shadow-primary rounded-lg">
           <h2 className="font-bold text-xl text-primary text-center">Your Orders</h2>
           <div className="max-h-60 overflow-y-auto mt-2">
             {orders.length > 0 ? (

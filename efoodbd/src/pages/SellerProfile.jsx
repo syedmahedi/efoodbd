@@ -69,12 +69,12 @@ const SellerProfile = () => {
   
 
   const handleOrderSubmit = async () => {
-    const buyerEmail = localStorage.getItem("userEmail"); // Assuming buyer email is stored in localStorage
+    const buyerEmail = localStorage.getItem("userEmail"); 
     const orderData = {
       buyerEmail,
       sellerId: id,
       postId: selectedPost.id,
-      orderedItem: selectedPost.title, // Add the ordered item's title
+      orderedItem: selectedPost.title, 
       quantity: orderDetails.quantity,
       contact: orderDetails.contact,
       price: calculateTotal(),
@@ -90,7 +90,7 @@ const SellerProfile = () => {
       });
 
       if (!orderDetails.contact || orderDetails.quantity < 1 || !response.ok) {
-        alert("Please provide valid contact information and quantity.");
+        alert("Are you loged in? Provide valid information");
         return;
       }
 
@@ -190,7 +190,7 @@ const SellerProfile = () => {
                       <p className="text-sm mt-2">{formatDate(post.created_at)}</p>
                     </div>
                     <button
-                      className="mt-4 bg-primary text-white px-4 py-2 rounded-lg hover:bg-hover self-end"
+                      className="mt-4 px-4 py-2 bg-primary hover:bg-hover text-white rounded-lg font-semibold self-end"
                       onClick={() => handleOrderNow(post)}
                     >
                       Order Now
@@ -211,6 +211,8 @@ const SellerProfile = () => {
         <div className="fixed inset-0 bg-primary-content bg-opacity-70 flex items-center justify-center z-50">
           <div className="bg-primary-content p-6 rounded-lg max-w-md w-full">
             <h2 className="text-lg text-center font-bold">Order: <span className="text-primary">{selectedPost.title}</span></h2>
+
+            {/* Quantity Field */}
             <label className="block mb-2">
               Quantity:
               <input
@@ -220,30 +222,50 @@ const SellerProfile = () => {
                 onChange={(e) =>
                   setOrderDetails({ ...orderDetails, quantity: Math.max(1, e.target.value) })
                 }
-                className="w-full mt-1 p-2 border rounded"
+                className="w-full mt-1 p-2 rounded border border-gray-800 bg-gray-900"
               />
             </label>
+
+            {/* Contact Field */}
             <label className="block mb-2">
               Contact Info:
               <input
-                type="text"
+                type="tel"
+                placeholder="Phone number"
+                id="contact"
                 value={orderDetails.contact}
                 onChange={(e) => setOrderDetails({ ...orderDetails, contact: e.target.value })}
-                className="w-full mt-1 p-2 border rounded"
+                className="w-full mt-1 p-2 border border-gray-800 bg-gray-900 rounded"
+                required
               />
             </label>
+
+            {/* Phone Number Validation Message */}
+            {!/^01[3-9][0-9]{8}$/.test(orderDetails.contact) && orderDetails.contact.length > 0 && (
+              <p className="text-red-500 text-sm mt-1">⚠ Please enter a valid BD phone number (e.g. 017***8)</p>
+            )}
+
+            {/* Total Price */}
             <h2 className="block mt-4 font-bold">
               Total Price:<span className="text-primary"> ৳{calculateTotal()} BDT</span>
             </h2>
+
+            {/* Buttons */}
             <div className="flex justify-end mt-4">
               <button
-                className="btn px-4 py-2 rounded mr-2"
+                className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded-lg mr-2"
                 onClick={() => setOrderModalOpen(false)}
               >
                 Cancel
               </button>
               <button
-                className="bg-primary text-white px-4 py-2 rounded"
+                type="submit"
+                className={`px-4 py-2 rounded-lg font-semibold ${
+                  /^01[3-9][0-9]{8}$/.test(orderDetails.contact)
+                    ? "bg-primary hover:bg-hover text-white"
+                    : "bg-primary text-white cursor-not-allowed"
+                }`}
+                disabled={!/^01[3-9][0-9]{8}$/.test(orderDetails.contact)}
                 onClick={handleOrderSubmit}
               >
                 Place Order

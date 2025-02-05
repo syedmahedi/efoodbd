@@ -6,7 +6,7 @@ const SearchBar = ({ onSearch }) => {
   const handleSearch = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
-    onSearch(value); // Call fetch function in Home.jsx
+    onSearch(value); 
   };
 
   return (
@@ -16,7 +16,7 @@ const SearchBar = ({ onSearch }) => {
         className="flex-grow px-4 py-2 border border-gray-500 rounded-lg focus:outline-none"
         value={searchTerm}
         onChange={handleSearch}
-        placeholder="Search by food category..."
+        placeholder="Search by food category / location - (e.g. Burger / Dhaka)"
       />
       <button
         onClick={handleSearch}

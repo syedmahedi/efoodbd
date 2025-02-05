@@ -125,7 +125,7 @@ app.get("/api/sellers/search", (req, res) => {
   }
 
   // Step 1: Search sellers by their food category
-  const sellerQuery = "SELECT * FROM sellers WHERE foodCategory LIKE ?";
+  const sellerQuery = "SELECT * FROM sellers WHERE CONCAT(foodCategory, location) LIKE ?";
   db.query(sellerQuery, [`%${category}%`], (err, sellersFromSellers) => {
     if (err) {
       console.error("Error fetching sellers:", err);

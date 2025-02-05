@@ -54,8 +54,6 @@ const Profile = () => {
     }
   };
 
-  
-
   const handlePostChange = (e) => {
     const { name, value, files } = e.target;
     setNewPost({
@@ -71,7 +69,6 @@ const Profile = () => {
                 method: "DELETE",
             });
             if (!response.ok) throw new Error("Failed to delete post.");
-            alert("Post deleted successfully!");
             setFoodPosts((prev) => prev.filter((post) => post.id !== postId)); // Update UI
         } catch (err) {
             alert("Error deleting post: " + err.message);
@@ -218,14 +215,14 @@ const Profile = () => {
                   <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                 </form>
                 <form onSubmit={handleProfileUpdate} className="space-y-4">
-                  <h3 className="text-lg font-bold">Edit Profile</h3>
+                  <h3 className="text-lg font-bold text-primary text-center">Edit Profile</h3>
                   <input
                     type="text"
                     name="name"
                     value={formData.name || ""}
                     onChange={handleInputChange}
                     placeholder="Name"
-                    className="w-full p-2 rounded"
+                    className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900"
                   />
                   <input
                     type="text"
@@ -233,7 +230,7 @@ const Profile = () => {
                     value={formData.phone || ""}
                     onChange={handleInputChange}
                     placeholder="Phone"
-                    className="w-full p-2 rounded"
+                    className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900"
                   />
                   <input
                     type="text"
@@ -241,7 +238,7 @@ const Profile = () => {
                     value={formData.location || ""}
                     onChange={handleInputChange}
                     placeholder="Location"
-                    className="w-full p-2 rounded"
+                    className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900"
                   />
                   {profileData.role === "Seller" && (
                     <input
@@ -250,7 +247,7 @@ const Profile = () => {
                       value={formData.foodCategory || ""}
                       onChange={handleInputChange}
                       placeholder="Food Category"
-                      className="w-full p-2 rounded"
+                      className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900"
                     />
                   )}
                   <input
@@ -259,7 +256,7 @@ const Profile = () => {
                     value={formData.occupation || ""}
                     onChange={handleInputChange}
                     placeholder="Occupation"
-                    className="w-full p-2 rounded"
+                    className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900"
                   />
                   
                   <textarea
@@ -267,15 +264,15 @@ const Profile = () => {
                     value={formData.bio || ""}
                     onChange={handleInputChange}
                     placeholder="Describe yourself"
-                    className="w-full p-2 rounded"
-                    rows="4"
+                    className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900"
+                    rows="3"
                   ></textarea>
                   <p>Upload your Profile Picture</p>
                   <input
                     type="file"
                     name="profilePicture"
                     onChange={handleInputChange}
-                    className="w-full p-2 rounded"
+                    className="w-full p-1 rounded-lg border border-gray-800 bg-gray-900"
                     accept="image/*"
                   />
                   <div className="flex justify-end">
@@ -303,17 +300,17 @@ const Profile = () => {
                     <input
                       type="text"
                       name="title"
-                      placeholder="Title"
+                      placeholder="Title (e.g. Home Cooked Biryani)"
                       value={newPost.title}
                       onChange={handlePostChange}
-                      className="w-full p-2 rounded"
+                      className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900"
                     />
                     <textarea
                       name="description"
-                      placeholder="Description"
+                      placeholder="Description (e.g. Ingredients, Quantity, etc)"
                       value={newPost.description}
                       onChange={handlePostChange}
-                      className="w-full p-2 rounded"
+                      className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900"
                       rows="4"
                     ></textarea>
                     <p>Upload Your Food Image</p>
@@ -321,7 +318,7 @@ const Profile = () => {
                       type="file"
                       name="foodImage"
                       onChange={handlePostChange}
-                      className="w-full rounded"
+                      className="w-full rounded-lg border p-1 border-gray-800 bg-gray-900"
                       accept="image/*"
                     />
                     <input
@@ -330,7 +327,7 @@ const Profile = () => {
                       placeholder="Price (in BDT)"
                       value={newPost.price}
                       onChange={handlePostChange}
-                      className="w-full p-2 rounded"
+                      className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900"
                     />
                     <div className="flex justify-end">
                       <button

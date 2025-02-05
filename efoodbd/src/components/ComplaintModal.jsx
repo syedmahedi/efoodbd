@@ -55,7 +55,7 @@ const ComplaintModal = ({ onClose }) => {
               name="complainant"
               value={formData.complainant}
               onChange={handleChange}
-              className="w-full px-3 py-2 rounded-lg"
+              className="w-full px-3 py-2 rounded-lg border border-gray-800 bg-gray-900"
               required
             />
           </div>
@@ -69,7 +69,7 @@ const ComplaintModal = ({ onClose }) => {
               name="respondent"
               value={formData.respondent}
               onChange={handleChange}
-              className="w-full px-3 py-2 rounded-lg"
+              className="w-full px-3 py-2 rounded-lg border border-gray-800 bg-gray-900"
               required
             />
           </div>
@@ -83,7 +83,7 @@ const ComplaintModal = ({ onClose }) => {
               name="respondent_id"
               value={formData.respondent_id}
               onChange={handleChange}
-              className="w-full px-3 py-2 rounded-lg"
+              className="w-full px-3 py-2 rounded-lg border border-gray-800 bg-gray-900"
               required
             />
           </div>
@@ -96,8 +96,8 @@ const ComplaintModal = ({ onClose }) => {
               name="description"
               value={formData.description}
               onChange={handleChange}
-              className="w-full px-3 py-2 rounded-lg"
-              rows="4"
+              className="w-full px-3 py-2 rounded-lg border border-gray-800 bg-gray-900"
+              rows="3"
               required
             />
           </div>
