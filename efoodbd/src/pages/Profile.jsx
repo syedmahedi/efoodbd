@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
+import { motion, AnimatePresence } from "framer-motion";
+import { useLocation } from "react-router-dom";
 
 const Profile = () => {
   const [profileData, setProfileData] = useState(null);
@@ -9,24 +11,38 @@ const Profile = () => {
   const [foodPosts, setFoodPosts] = useState([]);
   const [newPost, setNewPost] = useState({ title: "", description: "", foodImage: null });
   const navigate = useNavigate();
+  const [message, setMessage] = useState(null);
+  const [messageType, setMessageType] = useState(null);
+  const location = useLocation();
+  const [showModal, setShowModal] = useState(false);
   
 
   useEffect(() => {
     const email = localStorage.getItem("userEmail");
+    // Check if modal should be shown and hasn't been accepted before
+    const handleAcceptTerms = () => {
+      localStorage.setItem("termsAccepted", "true"); // Store in localStorage
+      setShowModal(false);
+    };  
 
     if (profileData?.id) {
       localStorage.setItem("userId", profileData.id);  // Save user ID in localStorage
       localStorage.setItem("role", profileData.role);  // Save user role in localStorage
+      localStorage.setItem("location", profileData.location);  // Save user location in localStorage
     }
 
     if (!email) {
-      alert("User is not logged in!");
+      setMessage("You need to sign in first.");
+      setMessageType("error");
       navigate("/signin");
       return;
     }
 
     const fetchProfileData = async () => {
       try {
+        if (location.state?.showTermsModal && !localStorage.getItem("acceptedTerms")) {
+          setShowModal(true);
+        }    
         const response = await fetch(`http://localhost:5000/api/users?email=${email}`);
         if (!response.ok) throw new Error("Failed to fetch profile data.");
         const data = await response.json();
@@ -41,7 +57,7 @@ const Profile = () => {
     };
 
     fetchProfileData();
-  }, [navigate, profileData?.id]);
+  }, [navigate, profileData?.id, location.state]);
 
   const fetchFoodPosts = async (sellerId) => {
     try {
@@ -71,7 +87,8 @@ const Profile = () => {
             if (!response.ok) throw new Error("Failed to delete post.");
             setFoodPosts((prev) => prev.filter((post) => post.id !== postId)); // Update UI
         } catch (err) {
-            alert("Error deleting post: " + err.message);
+            setMessage("Failed to delete post.");
+            setMessageType("error");
         }
     }
 };
@@ -95,12 +112,14 @@ const Profile = () => {
         body: formDataToSend,
       });
       if (!response.ok) throw new Error("Failed to create food post.");
-      alert("Food post created successfully!");
+      setMessage("Post created successfully!");
+      setMessageType("success");
       document.getElementById('my_modal_1').close();
       setNewPost({ title: "", description: "", foodImage: null,price: "" });
       fetchFoodPosts(profileData.id); // Refresh posts
     } catch (err) {
-      alert("Error creating food post: " + err.message);
+      setMessage("Failed to create post.");
+      setMessageType("error");
     }
   };
 
@@ -138,8 +157,8 @@ const Profile = () => {
     formDataToSend.append("location", formData.location);
     formDataToSend.append("occupation", formData.occupation || "");
     formDataToSend.append("bio", formData.bio || "");
-    formDataToSend.append("email", profileData.email); // Required
-    formDataToSend.append("role", profileData.role); // Required
+    formDataToSend.append("email", profileData.email); 
+    formDataToSend.append("role", profileData.role); 
 
     if (profileData.role === "Seller" && formData.foodCategory) {
       formDataToSend.append("foodCategory", formData.foodCategory);
@@ -157,21 +176,43 @@ const Profile = () => {
   
       if (!response.ok) throw new Error("Failed to update profile.");
       const updatedData = await response.json();
-      alert("Profile updated successfully!");
-      window.location.reload();
       setProfileData(updatedData);
       document.getElementById("editProfileModal").close(); // Close modal after update
+      setMessage("Profile updated successfully!");
+      setMessageType("success");
     } catch (err) {
-      alert("Error updating profile: " + err.message);
+      setMessage("Failed to update profile.");
+      setMessageType("error");
     }
   };
+
+  setTimeout(() => {
+    setMessage(null);
+    setMessageType(null);
+  }, 5000);
   
 
-  if (error) return <p className="text-red-500">Error: {error}</p>;
-  if (!profileData) return <div className="flex justify-center mt-12"><span className="loading loading-dots loading-md"></span>;</div>
+  if (error) return <p className="text-red-500">Error: {error.message}</p>;
+  if (!profileData) return <div className="flex justify-center items-center mt-12"><span className="loading loading-dots loading-md"></span></div>
 
   return (
     <div className="bg-primary-content min-h-screen">
+      {/* Message */}
+      <AnimatePresence>
+        {message && (
+          <motion.p
+            initial={{ y: -50, opacity: 0 }} 
+            animate={{ y: 0, opacity: 1 }} 
+            exit={{ y: -50, opacity: 0 }}
+            transition={{ duration: 0.5 }} 
+            className={`fixed top-6 left-0 right-0 z-50 text-center ${
+            messageType === "success" ? "text-green-500" : "text-red-500"
+          }`}
+        >
+          {message}
+          </motion.p>
+        )}
+      </AnimatePresence>
       <Header />
       <div className="container mx-auto py-8">
         <div className="max-w-6xl p-6 mx-auto">
@@ -195,7 +236,7 @@ const Profile = () => {
                   <img
                     src={`http://localhost:5000${profileData.profilePicture}` || "/default-profile.png"}
                     alt={profileData.name}
-                    className="w-full h-full object-cover scale-90 hover:scale-110 ease-in duration-500 items-center"
+                    className="text-center w-full h-full object-cover scale-100 hover:scale-110 ease-in duration-500 items-center"
                   />
                 </div>
               </div>
@@ -267,7 +308,7 @@ const Profile = () => {
                     className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900"
                     rows="3"
                   ></textarea>
-                  <p>Upload your Profile Picture</p>
+                  <p>Upload your Profile Picture (Max 2Mb)</p>
                   <input
                     type="file"
                     name="profilePicture"
@@ -375,6 +416,24 @@ const Profile = () => {
               )}
             </div>
         </div>
+        {/* Terms and Conditions Modal */}
+        {showModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+              <h2 className="text-xl font-bold mb-4">Terms & Conditions</h2>
+              <p className="mb-4">Please accept our terms and conditions to continue using XFoodBD.</p>
+              <button
+                onClick={() => {
+                  localStorage.setItem("termsAccepted", "true"); // Store acceptance in localStorage
+                  setShowModal(false); // Hide the modal
+                }}
+                className="bg-primary text-white p-2 rounded-lg w-full"
+              >
+                Accept & Continue
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

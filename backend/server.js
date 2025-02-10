@@ -4,12 +4,16 @@ const cors = require("cors");
 const multer = require('multer');
 const app = express();
 const fs = require("fs");
+const nodemailer = require("nodemailer");
 const path = require("path");
 
+
+require("dotenv").config();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // MySQL Connection
@@ -425,7 +429,83 @@ app.get("/api/sellerOrders", (req, res) => {
   });
 });
 
+//email to sellers for orders
+app.post("/api/send-order-email", async (req, res) => {
+  const { sellerEmail, buyerEmail, sellerName, orderedItem, quantity, price, contact } = req.body;
 
+  if (!sellerEmail || !buyerEmail) {
+    return res.status(400).json({ error: "Missing seller or buyer email" });
+  }
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: sellerEmail,
+    subject: "New Order Received",
+    html: `
+       <div style="font-family: Arial, sans-serif; padding: 8px; background: #f4f4f4; border-radius: 10px;">
+         <h2 style="color: #FC8934;">📦 New Order Received!</h2>
+         <p>Hello <strong>${sellerName}</strong>,</p>
+         <p>You have received a new order:</p>
+         <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+          <tr>
+            <td style="font-weight: bold; padding: 6px;">Buyer Email:</td>
+            <td style="padding: 6px;">${buyerEmail}</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold; padding: 6px;">Item:</td>
+            <td style="padding: 6px;">${orderedItem}</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold; padding: 6px;">Quantity:</td>
+            <td style="padding: 6px;">${quantity}</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold; padding: 6px;">Total Price:</td>
+            <td style="padding: 6px;">৳${price} BDT</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold; padding: 6px;">Contact:</td>
+            <td style="padding: 6px;">${contact}</td>
+          </tr>
+        </table>
+        <p>Check your dashboard for more details.</p>
+        <p>Best regards,</p>
+        <p><strong>XFoodBD Team</strong></p>
+        <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">       
+        <p style="text-align: center; font-size: 14px;">Follow us on:</p>
+        <p style="text-align: center;">
+          <a href="https://www.facebook.com/share/17MfbcR8C1/?mibextid=wwXIfr" style="text-decoration: none; margin: 0 10px;">
+            <img src="https://cdn-icons-png.flaticon.com/128/1384/1384005.png" alt="Facebook" width="24">
+          </a>
+          <a href="https://twitter.com/efoodbd" style="text-decoration: none; margin: 0 10px;">
+            <img src="https://cdn-icons-png.flaticon.com/128/733/733635.png" alt="Twitter" width="24">
+          </a>
+          <a href="https://instagram.com/efoodbd" style="text-decoration: none; margin: 0 10px;">
+            <img src="https://cdn-icons-png.flaticon.com/128/1384/1384031.png" alt="Instagram" width="24">
+          </a>
+        </p>
+        <p style="text-align: center; font-size: 12px; color: #666;">&copy; 2025 XFoodBD. All rights reserved.</p>
+      </div>
+     `,
+
+};
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ message: "Email sent successfully!" });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    res.status(500).json({ error: "Failed to send email" });
+  }
+});
 
 
 

@@ -9,13 +9,16 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [location, setLocation] = useState("");
-  const [role, setRole] = useState(""); // To distinguish between Buyer and Seller
+  const [role, setRole] = useState(""); 
   const [foodCategory, setFoodCategory] = useState(""); // Only for sellers
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // State for loading
   const navigate = useNavigate();
+  const [message, setMessage] = useState(null);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       // Sign up using Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -33,24 +36,29 @@ const SignUp = () => {
           phone,
           location,
           role,
-          foodCategory: role === "Seller" ? foodCategory : null, // Only include for sellers
+          foodCategory: role === "Seller" ? foodCategory : null, 
         }),
       });
 
       if (!response.ok) {
         throw new Error("Failed to save user data to the database.");
-      }
-      
+      }      
       // Store email in localStorage
       localStorage.setItem("userEmail", signedUpEmail);
-
-      alert("Account created successfully!");
-      navigate("/"); // Redirect to the homepage or login page
+      // Redirect to the profile page
+      navigate("/profile", { state: { showTermsModal: true } });
+          
     } catch (err) {
-      setError(err.message);
-      console.error("SignUp Error:", err);
+      setMessage("Failed to sign up. Please try again.");
     }
+    finally {
+      setLoading(false); // Reset loading
+    }
+    setTimeout(() => {
+      setMessage(null);
+    }, 3000);
   };
+  
 
   return (
     <div className="min-h-screen bg-primary-content flex items-center justify-center">
@@ -59,14 +67,14 @@ const SignUp = () => {
         className="bg-primary-content p-6 rounded text-primary shadow-md shadow-primary w-full max-w-md"
       >
         <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
-        {error && <p className="text-red-500 mb-4">{error}</p>}
+        {message && <p className="fixed top-6 left-0 right-0 z-50 text-red-500 mb-4 text-center">{message}</p>}
         
         <input
           type="text"
           placeholder="Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full p-2 border rounded mb-4"
+          className="w-full p-2 border border-gray-800 bg-gray-900 rounded-lg"
         />
         
         <input
@@ -74,7 +82,7 @@ const SignUp = () => {
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full p-2 border rounded mb-4"
+          className="w-full mt-4 p-2 border border-gray-800 bg-gray-900 rounded-lg"
         />
         
         <input
@@ -82,35 +90,41 @@ const SignUp = () => {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full p-2 border rounded mb-4"
+          className="w-full mt-4 p-2 border border-gray-800 bg-gray-900 rounded-lg"
         />
         
         <input
           type="text"
-          placeholder="Phone"
+          placeholder="Phone Number"
+          id="contact"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          className="w-full p-2 border rounded mb-4"
+          className={`w-full mt-4 p-2 border rounded-lg ${
+            phone && !/^01[3-9][0-9]{8}$/.test(phone) ? "border-red-500" : "border-gray-800"
+          } bg-gray-900`}
+          required
         />
-        
+        {phone && !/^01[3-9][0-9]{8}$/.test(phone) && (
+          <p className="text-red-500 mt-1">⚠ Please enter a valid phone number</p>
+        )}        
         <input
           type="text"
           placeholder="Location"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          className="w-full p-2 border rounded mb-4"
+          className="w-full mt-4 mb-2 p-2 border border-gray-800 bg-gray-900 rounded-lg"
         />
 
         <div className="mb-4">
-          <label className="block text-gray-600 font-bold mb-2">
+          <label className="block text-gray-500 font-bold mb-2">
             Choose Your Role:
           </label>
           <select
             value={role}
             onChange={(e) => setRole(e.target.value)}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border border-gray-800 bg-gray-900 rounded-lg"
           >
-            <option value="" disabled>
+            <option value="" disabled hidden>
               Select Role
             </option>
             <option value="Buyer">Buyer</option>
@@ -124,16 +138,20 @@ const SignUp = () => {
             placeholder="Food Category (e.g., Cakes)"
             value={foodCategory}
             onChange={(e) => setFoodCategory(e.target.value)}
-            className="w-full p-2 border rounded mb-4"
+            className="w-full mt-2 p-2 border border-gray-800 bg-gray-900 rounded-lg"
           />
         )}
 
         <button
           type="submit"
-          className="w-full bg-primary text-white p-2 rounded hover:bg-hover"
-          disabled={!role} // Disable button until role is selected
+          className="w-full bg-primary text-white p-2 rounded-xl hover:bg-hover font-semibold mt-6"
+          disabled={!role || loading || !phone || !name || !location}
         >
-          Sign Up
+          {loading ? (
+            <span className="loading loading-ring loading-md"></span>
+          ) : (
+            "Sign Up"
+          )}
         </button>
       </form>
     </div>

@@ -46,11 +46,9 @@ const Header = () => {
         setOrders(response.data.orders);
         document.getElementById("order_modal").showModal(); // Open modal
       } else {
-        console.error("Unexpected API response:", response.data);
         alert("Failed to fetch orders.");
       }
     } catch (error) {
-      console.error("Error fetching orders:", error);
       alert("An error occurred while fetching orders.");
     }
   };
@@ -77,10 +75,10 @@ const Header = () => {
   const role = localStorage.getItem("role");
 
   return (
-    <header className="py-4 px-2">
+    <header className="py-4 px-2 m-auto">
       <div className="container mx-auto flex justify-between items-center relative">
       <Link to="/" className="relative text-3xl font-bold text-primary hover:text-hover">
-        HomeFood
+        XFood
         <span className="absolute -top-1.5 -right-6 text-[12px] font-bold  text-white px-1">
           BD
         </span>

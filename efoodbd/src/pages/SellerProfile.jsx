@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Header from "../components/Header";
+import { motion, AnimatePresence } from "framer-motion";
 
 const SellerProfile = () => {
   const { id } = useParams();
   const [seller, setSeller] = useState(null);
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // State for loading
   const [selectedPost, setSelectedPost] = useState(null); // For the selected food post
   const [orderModalOpen, setOrderModalOpen] = useState(false);
+  const [message, setMessage] = useState(null);
+  const [messageType, setMessageType] = useState(null);
 
   const [orderDetails, setOrderDetails] = useState({
     quantity: 1,
@@ -16,6 +20,7 @@ const SellerProfile = () => {
   });
 
   useEffect(() => {
+
     const fetchSeller = async () => {
       try {
         const response = await fetch(`http://localhost:5000/api/sellers/${id}`);
@@ -48,7 +53,7 @@ const SellerProfile = () => {
 
   const handleOrderNow = (post) => {
     setSelectedPost(post);
-    setOrderModalOpen(true);
+    setOrderModalOpen(true); 
   };
   const calculateTotal = () => {
     return selectedPost.price * orderDetails.quantity;
@@ -68,7 +73,9 @@ const SellerProfile = () => {
   };
   
 
-  const handleOrderSubmit = async () => {
+  const handleOrderSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true); // Set loading
     const buyerEmail = localStorage.getItem("userEmail"); 
     const orderData = {
       buyerEmail,
@@ -79,7 +86,7 @@ const SellerProfile = () => {
       contact: orderDetails.contact,
       price: calculateTotal(),
     };
-
+  
     try {
       const response = await fetch("http://localhost:5000/api/orders", {
         method: "POST",
@@ -88,32 +95,78 @@ const SellerProfile = () => {
         },
         body: JSON.stringify(orderData),
       });
-
+  
       if (!orderDetails.contact || orderDetails.quantity < 1 || !response.ok) {
-        alert("Are you loged in? Provide valid information");
+        setMessage("Are you logged in? Provide valid information.");
+        setMessageType("error");
         return;
       }
-
-      alert("Order placed successfully!");
+  
+      // Send email to the seller
+      const emailResponse = await fetch("http://localhost:5000/api/send-order-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sellerEmail: seller.email, // Ensure this data is available
+          buyerEmail,
+          sellerName: seller.name,
+          orderedItem: selectedPost.title,
+          quantity: orderDetails.quantity,
+          price: calculateTotal(),
+          contact: orderDetails.contact,
+        }),
+      });
+      if (emailResponse.ok) {
+        setMessage("Order placed successfully!");
+        setMessageType("success");
+      } else {
+        setMessage("Order placed, but failed to send email to seller.");
+        setMessageType("error");
+      }
+  
+      // Reset form & close modal
       setOrderModalOpen(false);
       setOrderDetails({ quantity: 1, contact: "" });
     } catch (err) {
-      alert(`Error placing order: ${err.message}`);
+      setMessage(`Error placing order: ${err.message}`);
+      setMessageType("error");
     }
+    finally {
+      setLoading(false); // Reset loading
+    }
+    setTimeout(() => {
+      setMessage(null);
+      setMessageType(null);
+    }, 3000);
   };
+  
 
   if (error) {
     return <p className="text-red-500">{error}</p>;
   }
 
   if (!seller) {
-    return <p className="text-center mt-6">Loading...</p>;
+    return <p className="text-center mt-6"><span className="loading loading-spinner loading-md"></span></p>;
   }
-
-
 
   return (
     <div className="bg-primary-content min-h-screen">
+      {/* Message */}
+      <AnimatePresence>
+        {message && (
+          <motion.p
+            initial={{ y: -50, opacity: 0 }} 
+            animate={{ y: 0, opacity: 1 }} 
+            exit={{ y: -50, opacity: 0 }}
+            transition={{ duration: 0.5 }} 
+            className={`fixed top-6 left-0 right-0 z-50  text-center ${
+              messageType === "success" ? "text-green-500" : "text-red-500"
+            }`}
+          >
+            {message}
+          </motion.p>
+        )}
+      </AnimatePresence>
       <Header />
       <div className="max-w-6xl mx-auto p-6 rounded-lg py-8">
         {/* Seller Information */}
@@ -121,7 +174,7 @@ const SellerProfile = () => {
           <div className="w-36 h-36 rounded-full bg-gray-200 border-4 border-primary overflow-hidden">
             <img
               src={seller.profilePicture ? `http://localhost:5000${seller.profilePicture}` : "/default-profile.png"}
-              className="w-full h-full object-cover scale-90 hover:scale-110 ease-in duration-500 items-center"
+              className="w-full h-full object-cover scale-100 hover:scale-110 ease-in duration-500 items-center"
               alt="Seller Profile"
             />
           </div>
@@ -138,7 +191,6 @@ const SellerProfile = () => {
             </p>
           </div>
         </div>
-
         {/* About Seller */}
         <div className="mt-6">
           <h3 className="text-primary text-2xl font-semibol">About the Seller</h3>
@@ -188,7 +240,7 @@ const SellerProfile = () => {
                         )}
                       </p>
                       <p className="text-sm mt-2">{formatDate(post.created_at)}</p>
-                    </div>
+                    </div>                  
                     <button
                       className="mt-4 px-4 py-2 bg-primary hover:bg-hover text-white rounded-lg font-semibold self-end"
                       onClick={() => handleOrderNow(post)}
@@ -209,7 +261,7 @@ const SellerProfile = () => {
       {/* Order Modal */}
       {orderModalOpen && (
         <div className="fixed inset-0 bg-primary-content bg-opacity-70 flex items-center justify-center z-50">
-          <div className="bg-primary-content p-6 rounded-lg max-w-md w-full">
+          <div className="bg-primary-content p-6 rounded-lg max-w-md w-full shadow-sm shadow-primary">
             <h2 className="text-lg text-center font-bold">Order: <span className="text-primary">{selectedPost.title}</span></h2>
 
             {/* Quantity Field */}
@@ -222,7 +274,7 @@ const SellerProfile = () => {
                 onChange={(e) =>
                   setOrderDetails({ ...orderDetails, quantity: Math.max(1, e.target.value) })
                 }
-                className="w-full mt-1 p-2 rounded border border-gray-800 bg-gray-900"
+                className="w-full mt-1 p-2 rounded-lg border border-gray-800 bg-gray-900"
               />
             </label>
 
@@ -235,40 +287,47 @@ const SellerProfile = () => {
                 id="contact"
                 value={orderDetails.contact}
                 onChange={(e) => setOrderDetails({ ...orderDetails, contact: e.target.value })}
-                className="w-full mt-1 p-2 border border-gray-800 bg-gray-900 rounded"
+                className="w-full mt-1 p-2 border border-gray-800 bg-gray-900 rounded-lg"
                 required
               />
             </label>
 
             {/* Phone Number Validation Message */}
             {!/^01[3-9][0-9]{8}$/.test(orderDetails.contact) && orderDetails.contact.length > 0 && (
-              <p className="text-red-500 text-sm mt-1">⚠ Please enter a valid BD phone number (e.g. 017***8)</p>
+              <p className="text-red-500 text-sm mt-1">⚠ Please enter a valid phone number</p>
             )}
 
             {/* Total Price */}
             <h2 className="block mt-4 font-bold">
               Total Price:<span className="text-primary"> ৳{calculateTotal()} BDT</span>
             </h2>
+            
+            <lebel className="block mt-2 text-sm p-2">
+              <input type="checkbox" 
+              // value={payment}
+              required />
+              <span className="ml-2">Cash on Delivary</span>
+            </lebel>
 
             {/* Buttons */}
             <div className="flex justify-end mt-4">
               <button
-                className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded-lg mr-2"
+                className="w-full px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded-lg mr-2"
                 onClick={() => setOrderModalOpen(false)}
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className={`px-4 py-2 rounded-lg font-semibold ${
+                className={`w-full px-4 py-2 rounded-lg font-semibold ${
                   /^01[3-9][0-9]{8}$/.test(orderDetails.contact)
                     ? "bg-primary hover:bg-hover text-white"
                     : "bg-primary text-white cursor-not-allowed"
                 }`}
-                disabled={!/^01[3-9][0-9]{8}$/.test(orderDetails.contact)}
+                disabled={loading || !/^01[3-9][0-9]{8}$/.test(orderDetails.contact)}
                 onClick={handleOrderSubmit}
               >
-                Place Order
+                {loading ? <span className="loading loading-ring loading-md"></span> : "Place Order"}
               </button>
             </div>
           </div>
