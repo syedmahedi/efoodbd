@@ -112,56 +112,90 @@ app.get("/api/users", (req, res) => {
   });
 });
 
-// Fetch all sellers
-app.get("/api/sellers/search", (req, res) => {
-  const category = req.query.category;
 
-  if (!category) {
-    // If no category is provided, return all sellers
-    db.query("SELECT * FROM sellers", (err, sellers) => {
-      if (err) {
-        console.error("Error fetching sellers:", err);
-        return res.status(500).json({ message: "Database error" });
-      }
-      res.json(sellers);
-    });
-    return;
+// seeller search
+app.get("/api/sellers/searchbylocation", (req, res) => {
+  const { category, location } = req.query;
+
+  if (!location) {
+    return res.status(400).json({ error: "Location is required" });
   }
 
-  // Step 1: Search sellers by their food category
-  const sellerQuery = "SELECT * FROM sellers WHERE CONCAT(foodCategory, location) LIKE ?";
-  db.query(sellerQuery, [`%${category}%`], (err, sellersFromSellers) => {
+  let query = `SELECT * FROM sellers WHERE location LIKE ?`;
+  let params = [`%${location}%`];
+
+  if (category) {
+    query += ` AND (foodCategory LIKE ? OR id IN (
+      SELECT seller_id FROM food_posts WHERE title LIKE ?
+    ))`;
+    params.push(`%${category}%`, `%${category}%`);
+  }
+
+  db.query(query, params, (err, results) => {
     if (err) {
       console.error("Error fetching sellers:", err);
-      return res.status(500).json({ message: "Database error" });
+      return res.status(500).json({ error: "Database error" });
     }
 
-    // Step 2: Search food_posts to find sellers selling this food
-    const foodQuery = `
-      SELECT DISTINCT sellers.* 
-      FROM food_posts 
-      JOIN sellers ON food_posts.seller_id = sellers.id 
-      WHERE food_posts.title LIKE ?`;
+    if (results.length === 0) {
+      return res.status(404).json({ message: "No sellers found" });
+    }
 
-    db.query(foodQuery, [`%${category}%`], (err, sellersFromFoodPosts) => {
-      if (err) {
-        console.error("Error fetching food posts:", err);
-        return res.status(500).json({ message: "Database error" });
-      }
-
-      // Merge results and remove duplicate sellers (same seller.id)
-      const allSellers = [...sellersFromSellers, ...sellersFromFoodPosts];
-
-      // Use an object to ensure unique sellers
-      const uniqueSellers = {};
-      allSellers.forEach((seller) => {
-        uniqueSellers[seller.id] = seller;
-      });
-
-      res.json(Object.values(uniqueSellers)); // Send unique sellers list
-    });
+    res.json(results);
   });
 });
+
+
+// Fetch all sellers
+// app.get("/api/sellers/search", (req, res) => {
+//   const category = req.query.category;
+
+//   if (!category) {
+//     // If no category is provided, return all sellers
+//     db.query("SELECT * FROM sellers", (err, sellers) => {
+//       if (err) {
+//         console.error("Error fetching sellers:", err);
+//         return res.status(500).json({ message: "Database error" });
+//       }
+//       res.json(sellers);
+//     });
+//     return;
+//   }
+
+//   // Step 1: Search sellers by their food category
+//   const sellerQuery = "SELECT * FROM sellers WHERE CONCAT(foodCategory, location) LIKE ?";
+//   db.query(sellerQuery, [`%${category}%`], (err, sellersFromSellers) => {
+//     if (err) {
+//       console.error("Error fetching sellers:", err);
+//       return res.status(500).json({ message: "Database error" });
+//     }
+
+//     // Step 2: Search food_posts to find sellers selling this food
+//     const foodQuery = `
+//       SELECT DISTINCT sellers.* 
+//       FROM food_posts 
+//       JOIN sellers ON food_posts.seller_id = sellers.id 
+//       WHERE food_posts.title LIKE ?`;
+
+//     db.query(foodQuery, [`%${category}%`], (err, sellersFromFoodPosts) => {
+//       if (err) {
+//         console.error("Error fetching food posts:", err);
+//         return res.status(500).json({ message: "Database error" });
+//       }
+
+//       // Merge results and remove duplicate sellers (same seller.id)
+//       const allSellers = [...sellersFromSellers, ...sellersFromFoodPosts];
+
+//       // Use an object to ensure unique sellers
+//       const uniqueSellers = {};
+//       allSellers.forEach((seller) => {
+//         uniqueSellers[seller.id] = seller;
+//       });
+
+//       res.json(Object.values(uniqueSellers)); // Send unique sellers list
+//     });
+//   });
+// });
 
 
 

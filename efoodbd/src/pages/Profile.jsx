@@ -234,7 +234,7 @@ const Profile = () => {
               <div className="lg:w-1/2 flex justify-center mb-4 lg:mb-0">
                 <div className="w-40 h-40 rounded-full bg-gray-200 border-4 border-primary overflow-hidden hover:shadow-md hover:shadow-primary">
                   <img
-                    src={`http://localhost:5000${profileData.profilePicture}` || "/default-profile.png"}
+                    src={profileData.profilePicture ? `http://localhost:5000${profileData.profilePicture}` : "/default-profile.png"}
                     alt={profileData.name}
                     className="text-center w-full h-full object-cover scale-100 hover:scale-110 ease-in duration-500 items-center"
                   />

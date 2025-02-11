@@ -10,14 +10,17 @@ const Home = () => {
   const [error, setError] = useState(""); // Error handling
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Fetch sellers based on food category (or all by default)
-  const fetchSellers = async (category = "") => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/sellers/search?category=${category}`);
+  const location = localStorage.getItem("location"); // Get location from local storage
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch sellers");
-      }
+  // Fetch sellers based on location (initial load)
+  const fetchSellersByLocation = async () => {
+    if (!location) {
+      setError("Location not found in local storage.");
+      return;
+    }
+    try {
+      const response = await fetch(`http://localhost:5000/api/sellers/searchbylocation?location=${location}`);
+      if (!response.ok) throw new Error("Failed to fetch sellers");
 
       const data = await response.json();
       setSellers(data);
@@ -26,9 +29,39 @@ const Home = () => {
     }
   };
 
-  // Load all sellers on page load
+  // Fetch sellers based on category
+  const fetchSellersByCategory = async (category, location) => {
+    if (!location) {
+      setError("Location not found in local storage.");
+      return;
+    }
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/sellers/searchbylocation?category=${category}&location=${location}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch sellers");
+  
+      const data = await response.json();
+      
+      // If no sellers are found, set an empty array
+      if (data.length === 0) {
+        setSellers([]); 
+        setError("No sellers found for this category.");
+      } else {
+        setSellers(data);
+        setError(""); // Clear error if sellers are found
+      }
+    } catch (err) {
+      setSellers([]); // Ensure old data is cleared on error
+      setError(err.message);
+    }
+  };
+  
+  
+
+  // Load sellers based on location on page load
   useEffect(() => {
-    fetchSellers();
+    fetchSellersByLocation();
   }, []);
 
   const toggleModal = () => setIsModalOpen(!isModalOpen);
@@ -46,24 +79,23 @@ const Home = () => {
       </div>
 
       {/* Search Bar */}
-      <div className="container mx-auto py-6">
-        <SearchBar onSearch={fetchSellers} />
-        <h2 className="text-2xl font-bold my-6 text-primary">Best Sellers</h2>
-        {error && <p className="text-red-500">{error}</p>}
-        {sellers.length === 0 && !error && <p className="text-gray-500 text-center"><span className="loading loading-spinner loading-md"></span></p>}
-        
+      <div className="container mx-auto py-6 px-6 sm:px-0">
+        <SearchBar onSearch={fetchSellersByCategory} />
+        <h2 className="text-2xl font-bold my-6 text-primary">
+          Sellers in {location ? location.charAt(0).toUpperCase() + location.slice(1) : "your area"}
+        </h2>
+
+
         {/* Seller Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-base-content">
           {sellers.length > 0 ? (
-            // Show 6 sellers when not searching, all when searching
-            sellers
-              .sort((a, b) => b.id - a.id) // Sort by latest first
-              .slice(0, 6) // Conditional slice
-              .map((seller) => (
-                <SellerCard key={seller.seller_id} seller={seller} />
-              ))
-          ) : (
-            <p className="text-center text-gray-500 col-span-3">No sellers found</p>
+            sellers.map((seller) => (
+              <SellerCard key={seller.seller_id} seller={seller} />
+            ))
+          ) : (           
+            <p className="text-center col-span-3 text-gray-500"><span className="loading loading-spinner loading-md"></span>
+            <p className="text-center text-gray-500">No sellers found</p>
+            </p>
           )}
         </div>
 

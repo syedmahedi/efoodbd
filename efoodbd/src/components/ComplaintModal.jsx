@@ -9,6 +9,8 @@ const ComplaintModal = ({ onClose }) => {
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false); // State for loading
+  
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -16,7 +18,7 @@ const ComplaintModal = ({ onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true); // Set loading
     try {
       const response = await fetch("http://localhost:5000/api/complaints", {
         method: "POST",
@@ -25,7 +27,8 @@ const ComplaintModal = ({ onClose }) => {
         },
         body: JSON.stringify(formData),
       });
-
+      setLoading(false);
+      
       if (!response.ok) {
         throw new Error("Failed to submit complaint");
       }
@@ -37,6 +40,9 @@ const ComplaintModal = ({ onClose }) => {
       setError(err.message);
       setSuccess("");
     }
+    setTimeout(() => {
+      onClose();
+    }, 500); 
   };
 
   return (
@@ -87,7 +93,7 @@ const ComplaintModal = ({ onClose }) => {
               required
             />
           </div>
-          <div className="mb-4 py-4">
+          <div className="mb-2 py-4">
             <label className="block text-sm font-medium mb-1" htmlFor="description">
               Complaint Description
             </label>
@@ -105,12 +111,14 @@ const ComplaintModal = ({ onClose }) => {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded-lg mr-2"
+              className="w-full px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded-lg mr-4"
             >
               Cancel
             </button>
-            <button type="submit" className="px-4 py-2 bg-primary hover:bg-hover text-white rounded-lg font-semibold">
-              Submit
+            <button type="submit" className="w-full px-4 py-2 bg-primary hover:bg-hover text-white rounded-lg font-semibold"
+              disabled={loading}
+            >
+              {loading ? <span className="loading loading-ring loading-md"></span> : "submit"}
             </button>
           </div>
         </form>

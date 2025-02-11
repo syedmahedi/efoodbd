@@ -24,6 +24,7 @@ const Header = () => {
       localStorage.removeItem("userEmail");
       localStorage.removeItem("userId");
       localStorage.removeItem("role");
+      localStorage.removeItem("location");
       navigate("/");
     } catch (error) {
       console.error("Error signing out:", error);
@@ -150,7 +151,7 @@ const Header = () => {
 
         {/* Mobile Dropdown */}
         {menuOpen && (
-          <nav className="sm:hidden absolute top-12 right-4 bg-primary-content shadow-lg rounded-md p-6 mb-4">
+          <nav className="sm:hidden absolute top-12 right-4 bg-primary-content shadow-lg rounded-lg p-6 mb-4 pb-8">
             <ul className="flex flex-col gap-6 text-center">
               {!user ? (
                 <>
@@ -171,11 +172,13 @@ const Header = () => {
                 </>
               ) : (
                 <>
-                  <li>
-                    <button onClick={fetchOrders}>
-                      <img src="/notification.png" alt="notification" className="h-7 w-7 mx-auto cursor-pointer" />
-                    </button>
-                  </li>
+                  {role === "Seller" && (
+                    <li>
+                      <button onClick={fetchOrders}>
+                        <img src="/notification.png" alt="notification" className="h-7 w-7 mx-auto cursor-pointer" />
+                      </button>                   
+                    </li>
+                  )}
                   <li>
                     <button className="w-full bg-primary px-4 py-2 rounded-xl text-white font-medium hover:bg-hover" onClick={handleProfileClick}>
                       My Profile

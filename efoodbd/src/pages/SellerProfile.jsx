@@ -120,7 +120,7 @@ const SellerProfile = () => {
         setMessage("Order placed successfully!");
         setMessageType("success");
       } else {
-        setMessage("Order placed, but failed to send email to seller.");
+        setMessage("Check your internet connection!");
         setMessageType("error");
       }
   
