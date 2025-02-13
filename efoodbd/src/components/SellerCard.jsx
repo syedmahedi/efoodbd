@@ -17,7 +17,7 @@ const SellerCard = ({ seller }) => {
         <div>
           <h3 className="text-xl font-bold text-white">{seller.name}</h3>
           <p>{seller.location}</p>
-          <p>{seller.category}</p>
+          {/* <p>{seller.foodCategory}</p> */}
         </div>
         <div className="w-24 h-24 rounded-full bg-gray-200 border-2 border-primary overflow-hidden hover:shadow-md hover:shadow-primary">
           <img

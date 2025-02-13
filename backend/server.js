@@ -426,9 +426,6 @@ app.post("/api/orders", (req, res) => {
   });
 });
 
-
-
-
 app.get("/api/sellerOrders", (req, res) => {
   const { userId } = req.query; // Fetch seller_id from query parameters
 
@@ -460,6 +457,27 @@ app.get("/api/sellerOrders", (req, res) => {
     }
 
     res.json({ orders: results });
+  });
+});
+
+//count orders
+app.get("/api/seller-stats/:sellerId", (req, res) => {
+  const { sellerId } = req.params;
+
+  const query = `
+    SELECT 
+      COUNT(seller_id) AS total_orders, 
+      COALESCE(SUM(total_price), 0) AS total_sales
+    FROM orders
+    WHERE seller_id = ?;
+  `;
+
+  db.query(query, [sellerId], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: "Database query failed" });
+    }
+
+    res.json(results[0]); // Return stats object
   });
 });
 
@@ -556,19 +574,51 @@ app.delete('/api/foodPosts/:id', async (req, res) => {
   }
 });
 
-app.post("/api/complaints", async (req, res) => {
-  const { complainant, respondent,respondent_id, description } = req.body;
+app.post("/api/complaints/:userId", async (req, res) => {
+  const { complainant, respondent_id, description, rating } = req.body;
+  const userId = req.params.userId;
+
+  if (!complainant || !respondent_id || !description || !rating) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
 
   try {
-    await db.query(
-      "INSERT INTO complain (complainant, respondent, respondent_id, description) VALUES (?, ?, ?, ?)",
-      [complainant, respondent, respondent_id, description]
-    );
-    res.status(201).json({ message: "Complaint submitted successfully!" });
+    const query = `
+      INSERT INTO complain (complainant, complainant_id, respondent_id, description, rating)
+      VALUES (?, ?, ?, ?, ?)`;
+    const values = [complainant, userId, respondent_id, description, rating];
+
+    db.query(query, values, (err, result) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({ error: "Internal Server Error" });
+      }
+      res.status(201).json({ message: "Complaint submitted successfully" });
+    });
   } catch (error) {
-    res.status(500).json({ error: "Failed to save complaint" });
+    res.status(500).json({ error: "Server error" });
   }
 });
+
+
+// Fetch reviews for a seller
+app.get("/api/reviews/:sellerId", (req, res) => {
+  const { sellerId } = req.params;
+
+  const query = `
+    SELECT complainant, description, rating 
+    FROM complain 
+    WHERE respondent_id = ?`;
+
+  db.query(query, [sellerId], (err, results) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+    res.status(200).json(results);
+  });
+});
+
 
 
 // Search Sellers by Food Category

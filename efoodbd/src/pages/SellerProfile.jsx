@@ -2,6 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Header from "../components/Header";
 import { motion, AnimatePresence } from "framer-motion";
+import ComplaintModal from "../components/ComplaintModal";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/autoplay";
+import { Pagination,Autoplay } from "swiper/modules";
 
 const SellerProfile = () => {
   const { id } = useParams();
@@ -13,6 +19,8 @@ const SellerProfile = () => {
   const [orderModalOpen, setOrderModalOpen] = useState(false);
   const [message, setMessage] = useState(null);
   const [messageType, setMessageType] = useState(null);
+  const [stats, setStats] = useState({ total_orders: 0, total_sales: 0 });
+  const [reviews, setReviews] = useState([]);
 
   const [orderDetails, setOrderDetails] = useState({
     quantity: 1,
@@ -34,6 +42,31 @@ const SellerProfile = () => {
       }
     };
 
+    const fetchStats = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/seller-stats/${id}`);
+        if (!response.ok) throw new Error("Failed to fetch stats");
+
+        const data = await response.json();
+        setStats(data);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+    if (id) {
+      fetchStats();
+    }
+
+    const fetchReviews = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/reviews/${id}`);
+        const data = await response.json();
+        setReviews(data);
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
+    };
+
     const fetchPosts = async () => {
       try {
         const response = await fetch(`http://localhost:5000/api/sellers/${id}/posts`);
@@ -46,7 +79,7 @@ const SellerProfile = () => {
         setError(err.message);
       }
     };
-
+    fetchReviews();
     fetchSeller();
     fetchPosts();
   }, [id]);
@@ -139,7 +172,6 @@ const SellerProfile = () => {
       setMessageType(null);
     }, 3000);
   };
-  
 
   if (error) {
     return <p className="text-red-500">{error}</p>;
@@ -168,28 +200,77 @@ const SellerProfile = () => {
         )}
       </AnimatePresence>
       <Header />
-      <div className="max-w-6xl mx-auto p-6 rounded-lg py-8">
+      <div className="max-w-6xl mx-auto p-6 rounded-lg">
         {/* Seller Information */}
-        <div className="flex items-center space-x-6">
-          <div className="w-36 h-36 rounded-full bg-gray-200 border-4 border-primary overflow-hidden">
+        <div className="flex flex-col lg:flex-row items-center lg:items-start space-y-6 lg:space-y-0 lg:space-x-12 bg-primary-content p-6 rounded-lg shadow-md">
+          {/* Profile Image */}
+          <div className="w-32 h-32 sm:w-36 sm:h-36 rounded-full bg-gray-200 border-4 border-primary overflow-hidden flex-shrink-0">
             <img
               src={seller.profilePicture ? `http://localhost:5000${seller.profilePicture}` : "/default-profile.png"}
-              className="w-full h-full object-cover scale-100 hover:scale-110 ease-in duration-500 items-center"
+              className="w-full h-full object-cover scale-100 hover:scale-110 transition-transform duration-500"
               alt="Seller Profile"
             />
           </div>
-          <div>
-            <h2 className="text-3xl font-bold text-primary">{seller.name}</h2>
-            <p className="mt-1">
-              <span className="font-semibold">Location:</span> {seller.location}
+
+          {/* Seller Info */}
+          <div className="text-center lg:text-left mt-4 lg:mt-0 lg:ml-6">
+            <h2 className="text-2xl sm:text-3xl font-bold text-primary">{seller.name}</h2>
+            <p className="mt-1 text-gray-500">
+              <span className="font-semibold">📍Location:</span> {seller.location}
             </p>
-            <p>
-              <span className="font-semibold">Category:</span> {seller.foodCategory}
+            <p className="text-gray-500">
+              <span className="font-semibold">🍽 Category:</span> {seller.foodCategory}
             </p>
-            <p>
-              <span className="font-semibold">Seller ID: </span> {seller.id}
+            <p className="text-gray-500">
+              <span className="font-semibold">🆔 Seller ID:</span> {seller.id}
             </p>
           </div>
+
+          {/* Seller Stats */}
+          <div className="grid grid-cols-2 gap-12  bg-primary-content p-4 rounded-lg w-full max-w-xs">
+            <div className="text-center">
+              <p className="stat-title text-gray-500 font-semibold">Total Orders</p>
+              <p className="stat-value text-primary text-3xl font-bold">{stats.total_orders}</p>
+            </div>
+            <div className="text-center">
+              <p className="stat-title text-gray-500 font-semibold">Total Sales</p>
+              <p className="stat-value text-primary text-3xl font-bold">৳{stats.total_sales} BDT</p>
+            </div>
+          </div>
+        </div>
+        {/* review section */}
+        <div className="flex items-center lg:justify-start justify-center mx-auto px-6">
+          <ComplaintModal />
+        </div>
+        {/* Seller Reviews */}
+        <div className="w-full max-w-lg mx-auto mt-4">
+          <h2 className="text-xl font-bold text-center mb-4">Seller Reviews</h2>
+          {reviews.length > 0 ? (
+          <Swiper
+            modules={[Pagination, Autoplay]}
+            spaceBetween={10}
+            slidesPerView={1}
+            pagination={{ clickable: true }}
+            autoplay={{ delay: 4000 }}
+            className="rounded-lg border border-gray-800 mt-3 shadow-lg"
+          >
+            {reviews.map((review, index) => (
+              <SwiperSlide key={index} className="p-4 bg-gray-900 text-white rounded-lg">
+                <p className="text-lg font-semibold text-primary">{review.complainant}</p>
+                <p className="text-sm text-gray-400">{review.description}</p>
+                <div className="flex gap-1 mt-2 mb-2 justify-center">
+                  {[...Array(5)].map((_, i) => (
+                    <span key={i} className={`text-xl ${i < review.rating ? "text-yellow-400" : "text-gray-600"}`}>
+                      ★
+                    </span>
+                  ))}
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        ) : (
+          <p className="text-center text-gray-500">No reviews yet.</p>
+        )}
         </div>
         {/* About Seller */}
         <div className="mt-6">

@@ -64,7 +64,13 @@ const Home = () => {
     fetchSellersByLocation();
   }, []);
 
-  const toggleModal = () => setIsModalOpen(!isModalOpen);
+  const handleOpenModal = () => {
+    setIsModalOpen(true); // Open the modal
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Close the modal
+  };
 
   return (
     <div className="bg-primary-content min-h-screen">
@@ -79,7 +85,7 @@ const Home = () => {
       </div>
 
       {/* Search Bar */}
-      <div className="container mx-auto py-6 px-6 sm:px-0">
+      <div className="container mx-auto py-4 px-6 sm:px-0">
         <SearchBar onSearch={fetchSellersByCategory} />
         <h2 className="text-2xl font-bold my-6 text-primary">
           Sellers in {location ? location.charAt(0).toUpperCase() + location.slice(1) : "your area"}
@@ -97,22 +103,9 @@ const Home = () => {
             <p className="text-center text-gray-500">No sellers found</p>
             </p>
           )}
-        </div>
-
-        {/* Complaint Box */}
-        <div className="mt-12 text-center">
-          <button
-            onClick={toggleModal}
-            className="flex items-center justify-center mx-auto px-6 py-3 text-white bg-red-600 hover:bg-red-800 rounded-lg font-medium"
-          >
-            <img src="/paper.png" alt="complain box" className="h-6 w-6 mr-2" />
-            Complain Box
-          </button>
-        </div>
+        </div>       
       </div>
 
-      {/* Complaint Modal */}
-      {isModalOpen && <ComplaintModal onClose={toggleModal} />}
       <Footer />
     </div>
   );

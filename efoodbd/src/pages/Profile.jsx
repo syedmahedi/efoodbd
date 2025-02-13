@@ -242,14 +242,28 @@ const Profile = () => {
               </div>
             </div>
 
-              {/* Edit Profile Button and Modal */}
-          <div className="mt-8">
-            <button
-              className="btn bg-primary hover:bg-hover text-white"
-              onClick={() => document.getElementById("editProfileModal").showModal()}
-            >
-              Edit Profile
-            </button>
+            {/* Buttons Container */}
+            <div className="mt-8 flex flex-wrap gap-4 items-center lg:justify-start justify-center">
+              {/* Edit Profile Button */}
+              <button
+                className="btn bg-primary hover:bg-hover text-white"
+                onClick={() => document.getElementById("editProfileModal").showModal()}
+              >
+                Edit Profile
+              </button>
+
+              {/* Create Post Button (Only for Sellers) */}
+              {profileData.role === "Seller" && (
+                <button
+                  className="btn bg-primary text-white hover:bg-hover"
+                  onClick={() => document.getElementById("my_modal_1").showModal()}
+                >
+                  Create Post
+                </button>
+              )}
+            </div>
+
+            {/* Edit Profile Modal */}
             <dialog id="editProfileModal" className="modal">
               <div className="modal-box bg-primary-content shadow-sm shadow-primary">
                 <form method="dialog">
@@ -257,164 +271,68 @@ const Profile = () => {
                 </form>
                 <form onSubmit={handleProfileUpdate} className="space-y-4">
                   <h3 className="text-lg font-bold text-primary text-center">Edit Profile</h3>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name || ""}
-                    onChange={handleInputChange}
-                    placeholder="Name"
-                    className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900"
-                  />
-                  <input
-                    type="text"
-                    name="phone"
-                    value={formData.phone || ""}
-                    onChange={handleInputChange}
-                    placeholder="Phone"
-                    className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900"
-                  />
-                  <input
-                    type="text"
-                    name="location"
-                    value={formData.location || ""}
-                    onChange={handleInputChange}
-                    placeholder="Location"
-                    className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900"
-                  />
-                  {profileData.role === "Seller" && (
-                    <input
-                      type="text"
-                      name="foodCategory"
-                      value={formData.foodCategory || ""}
-                      onChange={handleInputChange}
-                      placeholder="Food Category"
-                      className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900"
-                    />
-                  )}
-                  <input
-                    type="text"
-                    name="occupation"
-                    value={formData.occupation || ""}
-                    onChange={handleInputChange}
-                    placeholder="Occupation"
-                    className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900"
-                  />
-                  
-                  <textarea
-                    name="bio"
-                    value={formData.bio || ""}
-                    onChange={handleInputChange}
-                    placeholder="Describe yourself"
-                    className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900"
-                    rows="3"
-                  ></textarea>
+                  <input type="text" name="name" value={formData.name || ""} onChange={handleInputChange} placeholder="Name" className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900" />
+                  <input type="text" name="phone" value={formData.phone || ""} onChange={handleInputChange} placeholder="Phone" className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900" />
+                  <input type="text" name="location" value={formData.location || ""} onChange={handleInputChange} placeholder="Location" className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900" />
+                  {profileData.role === "Seller" && <input type="text" name="foodCategory" value={formData.foodCategory || ""} onChange={handleInputChange} placeholder="Food Category" className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900" />}
+                  <input type="text" name="occupation" value={formData.occupation || ""} onChange={handleInputChange} placeholder="Occupation" className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900" />
+                  <textarea name="bio" value={formData.bio || ""} onChange={handleInputChange} placeholder="Describe yourself" className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900" rows="3"></textarea>
                   <p>Upload your Profile Picture (Max 2Mb)</p>
-                  <input
-                    type="file"
-                    name="profilePicture"
-                    onChange={handleInputChange}
-                    className="w-full p-1 rounded-lg border border-gray-800 bg-gray-900"
-                    accept="image/*"
-                  />
+                  <input type="file" name="profilePicture" onChange={handleInputChange} className="w-full p-1 rounded-lg border border-gray-800 bg-gray-900" accept="image/*" />
                   <div className="flex justify-end">
-                    <button
-                      type="submit"
-                      className="btn bg-primary hover:bg-hover text-white px-12 rounded-xl"
-                      
-                    >
-                      Save
-                    </button>
+                    <button type="submit" className="btn bg-primary hover:bg-hover text-white px-12 rounded-xl">Save</button>
                   </div>
                 </form>
               </div>
             </dialog>
-          </div>
-              {profileData.role === "Seller" && (
-                <div className="mt-6">
-                  <button className="btn bg-primary text-white hover:bg-hover" onClick={()=>document.getElementById('my_modal_1').showModal()}>Create Post</button>
-                  <dialog id="my_modal_1" className="modal">
-                    <div className="modal-box bg-primary-content shadow-sm shadow-primary">
-                      <form method="dialog">
-                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-                      </form>
-                      <form onSubmit={handlePostSubmit} className="space-y-4 mt-8">
-                    <input
-                      type="text"
-                      name="title"
-                      placeholder="Title (e.g. Home Cooked Biryani)"
-                      value={newPost.title}
-                      onChange={handlePostChange}
-                      className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900"
-                    />
-                    <textarea
-                      name="description"
-                      placeholder="Description (e.g. Ingredients, Quantity, etc)"
-                      value={newPost.description}
-                      onChange={handlePostChange}
-                      className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900"
-                      rows="4"
-                    ></textarea>
+
+            {/* Create Post Modal (Only for Sellers) */}
+            {profileData.role === "Seller" && (
+              <dialog id="my_modal_1" className="modal">
+                <div className="modal-box bg-primary-content shadow-sm shadow-primary">
+                  <form method="dialog">
+                    <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                  </form>
+                  <form onSubmit={handlePostSubmit} className="space-y-4 mt-8">
+                    <h3 className="text-lg font-bold text-primary text-center">Create Post</h3>
+                    <input type="text" name="title" placeholder="Title (e.g. Home Cooked Biryani)" value={newPost.title} onChange={handlePostChange} className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900" />
+                    <textarea name="description" placeholder="Description (e.g. Ingredients, Quantity, etc)" value={newPost.description} onChange={handlePostChange} className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900" rows="4"></textarea>
                     <p>Upload Your Food Image</p>
-                    <input
-                      type="file"
-                      name="foodImage"
-                      onChange={handlePostChange}
-                      className="w-full rounded-lg border p-1 border-gray-800 bg-gray-900"
-                      accept="image/*"
-                    />
-                    <input
-                      type="number"
-                      name="price"
-                      placeholder="Price (in BDT)"
-                      value={newPost.price}
-                      onChange={handlePostChange}
-                      className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900"
-                    />
+                    <input type="file" name="foodImage" onChange={handlePostChange} className="w-full rounded-lg border p-1 border-gray-800 bg-gray-900" accept="image/*" />
+                    <input type="number" name="price" placeholder="Price (in BDT)" value={newPost.price} onChange={handlePostChange} className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900" />
                     <div className="flex justify-end">
-                      <button
-                        type="submit"
-                        className="btn bg-primary hover:bg-hover text-white px-12 rounded-xl"
-                      >
-                        Post
-                      </button>
+                      <button type="submit" className="btn bg-primary hover:bg-hover text-white px-12 rounded-xl">Post</button>
                     </div>
                   </form>
-                    </div>
-                  </dialog>
-                  <h3 className="text-2xl font-semibold mt-8 text-primary">Your Posts</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-                    {foodPosts.length > 0 ? (
-                      foodPosts.map((post) => (
-                        <div
-                          key={post.id}
-                          className="rounded-2xl shadow-sm hover:shadow-md hover:shadow-gray-500 shadow-gray-500 overflow-hidden"
-                        >
-                          <img
-                            src={`http://localhost:5000${post.food_image}`}
-                            alt={post.title}
-                            className="w-full h-44 object-cover"
-                          />
-                          <div className="p-4 bg-gray-900 rounded-lg">
-                            <h4 className="text-lg font-bold text-primary">{post.title}</h4>
-                            <p className="text-sm mt-1">{post.description}</p>
-                            <p className="text-xl mt-1 font-bold">৳{post.price}</p>
-                            <p className="text-sm mt-1">{formatDate(post.created_at)}</p>
-                            <button
-                                onClick={() => handleDeletePost(post.id)}
-                                className="btn bg-red-600 text-white hover:bg-red-800 mt-4"
-                            >
-                                Delete Post
-                            </button>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <p>No posts yet!</p>
-                    )}
-                  </div>
                 </div>
-              )}
-            </div>
+              </dialog>
+            )}
+
+            {/* Your Posts Section */}
+            {profileData.role === "Seller" && (
+              <div>
+                <h3 className="text-2xl font-semibold mt-8 text-primary">Your Posts</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+                  {foodPosts.length > 0 ? (
+                    foodPosts.map((post) => (
+                      <div key={post.id} className="rounded-2xl shadow-sm hover:shadow-md hover:shadow-gray-500 shadow-gray-500 overflow-hidden">
+                        <img src={`http://localhost:5000${post.food_image}`} alt={post.title} className="w-full h-44 object-cover" />
+                        <div className="p-4 bg-gray-900 rounded-lg">
+                          <h4 className="text-lg font-bold text-primary">{post.title}</h4>
+                          <p className="text-sm mt-1">{post.description}</p>
+                          <p className="text-xl mt-1 font-bold">৳{post.price}</p>
+                          <p className="text-sm mt-1">{formatDate(post.created_at)}</p>
+                          <button onClick={() => handleDeletePost(post.id)} className="btn bg-red-600 text-white hover:bg-red-800 mt-4">Delete Post</button>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p>No posts yet!</p>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
         {/* Terms and Conditions Modal */}
         {showModal && (
