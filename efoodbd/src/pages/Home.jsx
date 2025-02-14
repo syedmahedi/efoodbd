@@ -74,7 +74,7 @@ const Home = () => {
             <p className="text-primary sm:leading-relaxed">আপনার ব্যবসা</p>
           </h1>
           <p className="text-md sm:text-lg font-light font-bangla mb-4">
-            আপনার ঘরের বানানো খাবার পৌঁছে দিন সবার কাছে !
+            আপনার ঘরের তৈরি খাবার পৌঁছে দিন সবার কাছে !
           </p>
           {/* Search Bar */}
           <SearchBar onSearch={fetchSellersByCategory} />

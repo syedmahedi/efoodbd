@@ -216,7 +216,7 @@ const SellerProfile = () => {
           <div className="text-center lg:text-left mt-4 lg:mt-0 lg:ml-6">
             <h2 className="text-2xl sm:text-3xl font-bold text-primary">{seller.name}</h2>
             <p className="mt-1 text-gray-500">
-              <span className="font-semibold">📍Location:</span> {seller.location}
+              <span className="font-semibold">📍 Location:</span> {seller.location}
             </p>
             <p className="text-gray-500">
               <span className="font-semibold">🍽 Category:</span> {seller.foodCategory}
@@ -251,7 +251,7 @@ const SellerProfile = () => {
             spaceBetween={10}
             slidesPerView={1}
             pagination={{ clickable: true }}
-            autoplay={{ delay: 4000 }}
+            autoplay={{ delay: 3000 }}
             className="rounded-lg border border-gray-800 mt-3 shadow-lg"
           >
             {reviews.map((review, index) => (

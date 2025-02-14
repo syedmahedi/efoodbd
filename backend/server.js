@@ -560,20 +560,19 @@ app.post("/api/send-order-email", async (req, res) => {
 });
 
 
-
-
 // delete post
 
 app.delete('/api/foodPosts/:id', async (req, res) => {
   const { id } = req.params;
   try {
-      await db.query('DELETE FROM food_posts WHERE id = ?', [id]);
+      db.query('DELETE FROM food_posts WHERE id = ?', [id]);
       res.status(200).send({ message: 'Post deleted successfully!' });
   } catch (error) {
       res.status(500).send({ error: 'Failed to delete post.' });
   }
 });
 
+// review section
 app.post("/api/complaints/:userId", async (req, res) => {
   const { complainant, respondent_id, description, rating } = req.body;
   const userId = req.params.userId;
@@ -582,19 +581,52 @@ app.post("/api/complaints/:userId", async (req, res) => {
     return res.status(400).json({ error: "All fields are required" });
   }
 
-  try {
-    const query = `
-      INSERT INTO complain (complainant, complainant_id, respondent_id, description, rating)
-      VALUES (?, ?, ?, ?, ?)`;
-    const values = [complainant, userId, respondent_id, description, rating];
+  // Prevent user from complaining about themselves
+  if (userId === respondent_id) {
+    return res.status(400).json({ error: "You cannot submit a complaint against yourself." });
+  }
 
-    db.query(query, values, (err, result) => {
+  try {
+    // **Check if the user has already submitted a complaint against the same respondent**
+    const checkQuery = `SELECT * FROM complain WHERE complainant_id = ? AND respondent_id = ?`;
+    db.query(checkQuery, [userId, respondent_id], (err, results) => {
       if (err) {
         console.error("Database error:", err);
         return res.status(500).json({ error: "Internal Server Error" });
       }
-      res.status(201).json({ message: "Complaint submitted successfully" });
+
+      if (results.length > 0) {
+        // **Update existing complaint instead of inserting a new one**
+        const updateQuery = `
+          UPDATE complain 
+          SET description = ?, rating = ?
+          WHERE complainant_id = ? AND respondent_id = ?`;
+
+        db.query(updateQuery, [description, rating, userId, respondent_id], (err, updateResult) => {
+          if (err) {
+            console.error("Database error:", err);
+            return res.status(500).json({ error: "Internal Server Error" });
+          }
+          res.status(200).json({ message: "Complaint updated successfully" });
+        });
+
+      } else {
+        // **Insert new complaint if no previous complaint exists**
+        const insertQuery = `
+          INSERT INTO complain (complainant, complainant_id, respondent_id, description, rating)
+          VALUES (?, ?, ?, ?, ?)`;
+        const values = [complainant, userId, respondent_id, description, rating];
+
+        db.query(insertQuery, values, (err, insertResult) => {
+          if (err) {
+            console.error("Database error:", err);
+            return res.status(500).json({ error: "Internal Server Error" });
+          }
+          res.status(201).json({ message: "Complaint submitted successfully" });
+        });
+      }
     });
+
   } catch (error) {
     res.status(500).json({ error: "Server error" });
   }

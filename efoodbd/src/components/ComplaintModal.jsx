@@ -46,6 +46,8 @@ const ComplaintModal = ({ onClose }) => {
     setLoading(false);
   };
 
+  
+
   return (
     <>
       <button className="bg-primary px-4 py-2 rounded-xl text-white font-medium hover:bg-hover mb-4 lg:mb-0" onClick={() => document.getElementById("complaint_modal").showModal()}>
@@ -55,8 +57,6 @@ const ComplaintModal = ({ onClose }) => {
       <dialog id="complaint_modal" className="modal modal-bottom sm:modal-middle">
         <div className="modal-box bg-primary-content p-6 rounded-lg shadow-sm shadow-primary">
           <h2 className="text-2xl text-center text-primary font-bold mb-4">Submit a Review</h2>
-          {error && <p className="text-red-500">{error}</p>}
-          {success && <p className="text-green-500">{success}</p>}
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1 px-2">Your Name</label>
@@ -65,7 +65,7 @@ const ComplaintModal = ({ onClose }) => {
                 name="complainant"
                 value={formData.complainant}
                 onChange={handleChange}
-                className="w-full px-6 py-2 rounded-lg border border-gray-800 bg-gray-900"
+                className="w-full px-3 py-2 rounded-lg border border-gray-800 bg-gray-900"
                 required
               />
             </div>
@@ -76,7 +76,7 @@ const ComplaintModal = ({ onClose }) => {
                 name="respondent_id"
                 value={formData.respondent_id}
                 onChange={handleChange}
-                className="w-full px-6 py-2 rounded-lg border border-gray-800 bg-gray-900"
+                className="w-full px-3 py-2 rounded-lg border border-gray-800 bg-gray-900"
                 required
               />
             </div>
@@ -86,7 +86,7 @@ const ComplaintModal = ({ onClose }) => {
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
-                className="w-full px-6 py-2 rounded-lg border border-gray-800 bg-gray-900"
+                className="w-full px-3 py-2 rounded-lg border border-gray-800 bg-gray-900"
                 rows="3"
                 required
               />
@@ -108,11 +108,11 @@ const ComplaintModal = ({ onClose }) => {
             </div>
             <div className="modal-action">
               <form method="dialog">
-                <button className="bg-gray-300 px-4 py-2 rounded-xl text-black font-medium hover:bg-gray-400">Close</button>
+                <button className="bg-gray-300 px-6 py-2 rounded-xl text-black font-medium hover:bg-gray-400">Close</button>
               </form>
               <button
                 type="submit"
-                className="px-4 py-2 bg-primary hover:bg-hover text-white rounded-xl font-medium"
+                className="px-6 py-2 bg-primary hover:bg-hover text-white rounded-xl font-medium"
                 disabled={loading}
               >
                 {loading ? "Submitting..." : "Submit"}
