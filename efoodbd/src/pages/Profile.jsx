@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "react-router-dom";
+import Footer from "../components/Footer";
 
 const Profile = () => {
   const [profileData, setProfileData] = useState(null);
@@ -246,7 +247,7 @@ const Profile = () => {
             <div className="mt-8 flex flex-wrap gap-4 items-center lg:justify-start justify-center">
               {/* Edit Profile Button */}
               <button
-                className="btn bg-primary hover:bg-hover text-white"
+                className="bg-primary px-4 py-2.5 rounded-xl text-white font-medium hover:bg-hover"
                 onClick={() => document.getElementById("editProfileModal").showModal()}
               >
                 Edit Profile
@@ -255,7 +256,7 @@ const Profile = () => {
               {/* Create Post Button (Only for Sellers) */}
               {profileData.role === "Seller" && (
                 <button
-                  className="btn bg-primary text-white hover:bg-hover"
+                  className="bg-primary px-4 py-2.5 rounded-xl text-white font-medium hover:bg-hover"
                   onClick={() => document.getElementById("my_modal_1").showModal()}
                 >
                   Create Post
@@ -337,22 +338,26 @@ const Profile = () => {
         {/* Terms and Conditions Modal */}
         {showModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-              <h2 className="text-xl font-bold mb-4">Terms & Conditions</h2>
-              <p className="mb-4">Please accept our terms and conditions to continue using XFoodBD.</p>
-              <button
-                onClick={() => {
-                  localStorage.setItem("termsAccepted", "true"); // Store acceptance in localStorage
-                  setShowModal(false); // Hide the modal
-                }}
-                className="bg-primary text-white p-2 rounded-lg w-full"
-              >
-                Accept & Continue
-              </button>
-            </div>
+          <div className="bg-gray-900 p-6 rounded-lg shadow-lg w-96 max-h-[80vh] overflow-y-auto">
+            <h2 className="text-xl font-bold mb-4">Terms & Conditions</h2>
+            <p className="text-sm mb-4">
+              XFoodBD শুধুমাত্র ক্রেতা ও বিক্রেতাদের সংযোগ স্থাপন করে, কিন্তু কোনো লেনদেনের জন্য দায়ী নয়।  
+              আমাদের প্ল্যাটফর্ম ব্যবহার করার মাধ্যমে, আপনি সম্মত হচ্ছেন যে XFoodBD কোনো পেমেন্ট, ডেলিভারি বা প্রতারণার দায় নেবে না।  
+            </p>
+            <button
+              onClick={() => {
+                localStorage.setItem("termsAccepted", "true"); // Store acceptance in localStorage
+                setShowModal(false); // Hide the modal
+              }}
+              className="bg-primary text-white p-2 rounded-lg w-full"
+            >
+              Accept & Continue
+            </button>
           </div>
+        </div>        
         )}
       </div>
+      <Footer />
     </div>
   );
 };

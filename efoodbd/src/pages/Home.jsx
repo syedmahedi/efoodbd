@@ -2,13 +2,11 @@ import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import SearchBar from "../components/SearchBar";
 import SellerCard from "../components/SellerCard";
-import ComplaintModal from "../components/ComplaintModal";
 import Footer from "../components/Footer";
 
 const Home = () => {
   const [sellers, setSellers] = useState([]); // Sellers to display
   const [error, setError] = useState(""); // Error handling
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const location = localStorage.getItem("location"); // Get location from local storage
 
@@ -64,34 +62,34 @@ const Home = () => {
     fetchSellersByLocation();
   }, []);
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true); // Open the modal
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false); // Close the modal
-  };
 
   return (
     <div className="bg-primary-content min-h-screen">
       <Header />
-      <div className="container mx-auto text-center px-4">
-        <h1 className="text-3xl mt-8 sm:text-5xl sm:mt-20 text-white font-bangla leading-relaxed">
-          নিজের এলাকায় গড়ে তুলুন <span className="text-primary">আপনার ব্যবসা</span>
-        </h1>
-        <p className="mt-4 text-md sm:text-lg font-light font-bangla">
-          আপনার ঘরের বানানো খাবার পৌঁছে দিন সবার কাছে !
-        </p>
+      <div className="flex flex-col-reverse lg:flex-row items-center justify-center lg:gap-0 px-6 sm:px-24 pt-3 sm:pt-0">
+        {/* Left Content */}
+        <div className="container mx-auto text-center lg:text-center">
+          <h1 className="text-3xl mt-4 sm:text-5xl text-white font-bangla leading-relaxed">
+            নিজের এলাকায় গড়ে তুলুন{" "}
+            <p className="text-primary sm:leading-relaxed">আপনার ব্যবসা</p>
+          </h1>
+          <p className="text-md sm:text-lg font-light font-bangla mb-4">
+            আপনার ঘরের বানানো খাবার পৌঁছে দিন সবার কাছে !
+          </p>
+          {/* Search Bar */}
+          <SearchBar onSearch={fetchSellersByCategory} />
+        </div>
+
+        {/* Right Image */}
+        <div className="flex justify-center lg:justify-center w-full lg:w-3/4">
+          <img src="home.png" alt="Home" className="w-full max-w-80 lg:max-w-sm h-auto" />
+        </div>
       </div>
 
-      {/* Search Bar */}
-      <div className="container mx-auto py-4 px-6 sm:px-0">
-        <SearchBar onSearch={fetchSellersByCategory} />
-        <h2 className="text-2xl font-bold my-6 text-primary">
+      <div className="container mx-auto px-6 lg:px-0">
+        <h2 className="text-2xl font-bold my-4 lg:mb-4 lg:my-0 text-primary">
           Sellers in {location ? location.charAt(0).toUpperCase() + location.slice(1) : "your area"}
         </h2>
-
-
         {/* Seller Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-base-content">
           {sellers.length > 0 ? (
