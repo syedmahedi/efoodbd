@@ -684,13 +684,6 @@ app.get("/api/search-sellers", (req, res) => {
 
 
 
-
-
-
-
-
-
-
 // Start Server
 const PORT = 5000;
 app.listen(PORT, () => {

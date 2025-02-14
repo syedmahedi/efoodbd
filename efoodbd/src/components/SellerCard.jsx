@@ -16,8 +16,7 @@ const SellerCard = ({ seller }) => {
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-xl font-bold text-white mb-1">{seller.name}</h3>
-          <p className="font-semibold">📍 {seller.location}</p>
-          {/* <p>{seller.foodCategory}</p> */}
+          <p className="">📍 {seller.location.toUpperCase()}</p>
         </div>
         <div className="w-24 h-24 rounded-full bg-gray-200 border-2 border-primary overflow-hidden hover:shadow-md hover:shadow-primary">
           <img

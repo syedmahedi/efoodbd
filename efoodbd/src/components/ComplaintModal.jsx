@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const ComplaintModal = ({ onClose }) => {
   const [formData, setFormData] = useState({
@@ -8,10 +9,27 @@ const ComplaintModal = ({ onClose }) => {
     rating: 2, // Default rating
   });
 
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [message, setMessage] = useState(null);
+  const [messageType, setMessageType] = useState(null);
+  const [seller, setSeller] = useState("");
   const [loading, setLoading] = useState(false);
   const id = localStorage.getItem("userId");
+
+  useEffect(() => { 
+      const fetchSeller = async () => {
+        try {
+          const response = await fetch(`http://localhost:5000/api/sellers/${id}`);
+          if (!response.ok) {
+            throw new Error("Failed to fetch seller details");
+          }
+          const data = await response.json();
+          setSeller(data);
+        } catch (err) {
+          setError(err.message);
+        }
+      };
+      fetchSeller();
+  },[id]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -31,29 +49,51 @@ const ComplaintModal = ({ onClose }) => {
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) throw new Error("Failed to submit complaint");
-
-      setSuccess("Complaint submitted successfully!");
-      setError("");
-      setFormData({ complainant: "", respondent_id: "", description: "", rating: 3 });
+      if (!response.ok){
+        setMessage("Failed to submit complaint");
+        setMessageType("error");
+      }
+      else{
+      setMessage("Complaint submitted successfully!");
+      setMessageType("success");
+      setFormData({ complainant: "", respondent_id: "", description: "", rating: 2 });
 
       // Close modal automatically
       document.getElementById("complaint_modal").close();
+      }
     } catch (err) {
       setError(err.message);
       setSuccess("");
     }
     setLoading(false);
+    setTimeout(() => {
+      setMessage(null);
+      setMessageType(null);
+    }, 3000);
   };
 
-  
 
   return (
     <>
       <button className="bg-primary px-4 py-2 rounded-xl text-white font-medium hover:bg-hover mb-4 lg:mb-0" onClick={() => document.getElementById("complaint_modal").showModal()}>
         Write a Review
       </button>
-
+      {/* Message */}
+      <AnimatePresence>
+        {message && (
+          <motion.p
+            initial={{ y: -50, opacity: 0 }} 
+            animate={{ y: 0, opacity: 1 }} 
+            exit={{ y: -50, opacity: 0 }}
+            transition={{ duration: 0.5 }} 
+            className={`fixed top-6 left-0 right-0 z-50  text-center ${
+              messageType === "success" ? "text-green-500" : "text-red-500"
+            }`}
+          >
+            {message}
+          </motion.p>
+        )}
+      </AnimatePresence>
       <dialog id="complaint_modal" className="modal modal-bottom sm:modal-middle">
         <div className="modal-box bg-primary-content p-6 rounded-lg shadow-sm shadow-primary">
           <h2 className="text-2xl text-center text-primary font-bold mb-4">Submit a Review</h2>

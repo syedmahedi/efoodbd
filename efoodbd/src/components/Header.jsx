@@ -124,7 +124,7 @@ const Header = () => {
                     Sign Out
                   </button>
                   <dialog id="signout_modal" className="modal modal-bottom sm:modal-middle bg-black bg-opacity-50">
-                    <div className="modal-box bg-primary-content rounded-lg">
+                    <div className="modal-box bg-gray-900 rounded-lg">
                       <h3 className="font-bold text-lg text-center">Are you sure you want to sign out?</h3>
                       <div className="modal-action flex justify-center gap-4">
                         <form method="dialog">

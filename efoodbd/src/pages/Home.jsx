@@ -66,7 +66,7 @@ const Home = () => {
   return (
     <div className="bg-primary-content min-h-screen">
       <Header />
-      <div className="flex flex-col-reverse lg:flex-row items-center justify-center lg:gap-0 px-6 sm:px-24 pt-3 sm:pt-0">
+      <div className="flex flex-col-reverse lg:flex-row items-center justify-center lg:gap-0 px-6 lg:px-24 pt-3 sm:pt-0">
         {/* Left Content */}
         <div className="container mx-auto text-center lg:text-center">
           <h1 className="text-3xl mt-4 sm:text-5xl text-white font-bangla leading-relaxed">
