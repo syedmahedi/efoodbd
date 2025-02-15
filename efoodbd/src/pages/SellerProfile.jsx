@@ -21,6 +21,8 @@ const SellerProfile = () => {
   const [messageType, setMessageType] = useState(null);
   const [stats, setStats] = useState({ total_orders: 0, total_sales: 0 });
   const [reviews, setReviews] = useState([]);
+  const [averageRating, setAverageRating] = useState(0);
+
 
   const [orderDetails, setOrderDetails] = useState({
     quantity: 1,
@@ -61,11 +63,14 @@ const SellerProfile = () => {
       try {
         const response = await fetch(`http://localhost:5000/api/reviews/${id}`);
         const data = await response.json();
-        setReviews(data);
+    
+        setReviews(data.reviews); // Extract reviews
+        setAverageRating(data.averageRating); // Extract average rating
       } catch (error) {
         console.error("Error fetching reviews:", error);
       }
     };
+    
 
     const fetchPosts = async () => {
       try {
@@ -224,6 +229,9 @@ const SellerProfile = () => {
             <p className="text-gray-500">
               <span className="font-semibold">🆔 Seller ID:</span> {seller.id}
             </p>
+            <p className="text-gray-500 font-semibold">
+              ⭐ Average Rating: {averageRating} 
+            </p>
           </div>
 
           {/* Seller Stats */}
@@ -258,6 +266,7 @@ const SellerProfile = () => {
               <SwiperSlide key={index} className="p-4 bg-gray-900 text-white rounded-lg">
                 <p className="text-lg font-semibold text-primary">{review.complainant}</p>
                 <p className="text-sm text-gray-400">{review.description}</p>
+                {/* <p className="text-sm text-gray-400">{review.average_rating}</p> */}
                 <div className="flex gap-1 mt-2 mb-2 justify-center">
                   {[...Array(5)].map((_, i) => (
                     <span key={i} className={`text-xl ${i < review.rating ? "text-yellow-400" : "text-gray-600"}`}>

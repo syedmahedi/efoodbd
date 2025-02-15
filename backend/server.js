@@ -582,9 +582,9 @@ app.post("/api/complaints/:userId", async (req, res) => {
   }
 
   // Prevent user from complaining about themselves
-  if (userId === respondent_id) {
-    return res.status(400).json({ error: "You cannot submit a complaint against yourself." });
-  }
+  // if (userId === respondent_id) {
+  //   return res.status(400).json({ error: "You cannot submit a complaint against yourself." });
+  // }
 
   try {
     // **Check if the user has already submitted a complaint against the same respondent**
@@ -633,7 +633,7 @@ app.post("/api/complaints/:userId", async (req, res) => {
 });
 
 
-// Fetch reviews for a seller
+// Fetch reviews for a seller along with the average rating
 app.get("/api/reviews/:sellerId", (req, res) => {
   const { sellerId } = req.params;
 
@@ -642,12 +642,28 @@ app.get("/api/reviews/:sellerId", (req, res) => {
     FROM complain 
     WHERE respondent_id = ?`;
 
-  db.query(query, [sellerId], (err, results) => {
+  const avgRatingQuery = `
+    SELECT AVG(rating) AS average_rating 
+    FROM complain 
+    WHERE respondent_id = ?`;
+
+  // Execute both queries in parallel
+  db.query(query, [sellerId], (err, reviews) => {
     if (err) {
       console.error("Database error:", err);
       return res.status(500).json({ error: "Internal Server Error" });
     }
-    res.status(200).json(results);
+
+    db.query(avgRatingQuery, [sellerId], (err, avgResult) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({ error: "Internal Server Error" });
+      }
+
+      const averageRating = avgResult[0]?.average_rating || 0; // Default to 0 if no rating exists
+
+      res.status(200).json({ reviews, averageRating });
+    });
   });
 });
 
