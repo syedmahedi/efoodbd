@@ -37,7 +37,7 @@ const SignIn = () => {
 
       const userData = await response.json();
       if (userData.role === "Seller" || userData.role === "Buyer") {
-        navigate("/profile");
+        navigate("/profile", { state: { showTermsModal: true } });
       } else {
         setError("User role not found.");
       }
@@ -57,7 +57,7 @@ const SignIn = () => {
     <div className="min-h-screen bg-primary-content flex items-center justify-center">
       <form
         onSubmit={handleSignIn}
-        className="bg-gray-900 p-6 rounded-lg text-white w-full max-w-md"
+        className="bg-gray-900 mx-2 p-6 rounded-lg text-white w-full max-w-md"
       >
         <h2 className="text-2xl font-bold mb-6 text-center text-primary">Sign In</h2>
         {error && <p className="text-red-500 mb-4 text-center">{error}</p>}

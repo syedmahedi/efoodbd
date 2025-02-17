@@ -25,7 +25,10 @@ const Header = () => {
       localStorage.removeItem("userId");
       localStorage.removeItem("role");
       localStorage.removeItem("location");
+      localStorage.removeItem("termsAccepted");
+      document.getElementById("signout_modal").close();
       navigate("/");
+      window.location.reload();
     } catch (error) {
       console.error("Error signing out:", error);
     }
@@ -118,26 +121,10 @@ const Header = () => {
                   </button>
                 </li>
                 <li>
-                  {/* Open the modal using document.getElementById('ID').showModal() method */}
                   <button className="bg-red-600 px-4 py-2 rounded-xl text-white font-medium hover:bg-red-800" 
                     onClick={() => document.getElementById('signout_modal').showModal()}>
                     Sign Out
                   </button>
-                  <dialog id="signout_modal" className="modal modal-bottom sm:modal-middle bg-black bg-opacity-50">
-                    <div className="modal-box bg-gray-900 rounded-lg">
-                      <h3 className="font-bold text-lg text-center">Are you sure you want to sign out?</h3>
-                      <div className="modal-action flex justify-center gap-4">
-                        <form method="dialog">
-                          <button className="bg-gray-200 px-6 py-2 rounded-xl text-black font-medium hover:bg-gray-400">No</button>
-                        </form>
-                        <button 
-                          onClick={handleSignOut} 
-                          className="bg-red-600 px-6 py-2 rounded-xl text-white font-medium hover:bg-red-800">
-                          Yes
-                        </button>
-                      </div>
-                    </div>
-                  </dialog>
                 </li>
               </>
             )}
@@ -151,7 +138,7 @@ const Header = () => {
 
         {/* Mobile Dropdown */}
         {menuOpen && (
-          <nav className="sm:hidden absolute top-12 right-4 bg-primary-content shadow-lg rounded-lg p-6 mb-4 pb-8">
+          <nav className="sm:hidden absolute top-8 right-0 bg-primary-content rounded-xl p-6 mb-4 pb-8">
             <ul className="flex flex-col gap-6 text-center">
               {!user ? (
                 <>
@@ -185,9 +172,10 @@ const Header = () => {
                     </button>
                   </li>
                   <li>
-                    <button onClick={handleSignOut} className="w-full bg-red-600 px-4 py-2 rounded-xl text-white font-medium hover:bg-red-800">
-                      Sign Out
-                    </button>
+                  <button className="bg-red-600 px-4 py-2 rounded-xl text-white font-medium hover:bg-red-800" 
+                    onClick={() => document.getElementById('signout_modal').showModal()}>
+                    Sign Out
+                  </button>
                   </li>
                 </>
               )}
@@ -195,6 +183,23 @@ const Header = () => {
           </nav>
         )}
       </div>
+
+      {/* modal for signout */}
+      <dialog id="signout_modal" className="modal modal-bottom sm:modal-middle bg-primary-content bg-opacity-60">
+        <div className="modal-box bg-gray-900 rounded-lg">
+          <h3 className="font-bold text-lg text-center">Are you sure you want to <span className="text-primary">sign out</span> ?</h3>
+            <div className="modal-action flex justify-center gap-4">
+              <form method="dialog">
+                <button className="bg-gray-200 px-6 py-2 rounded-xl text-black font-medium hover:bg-gray-400">No</button>
+              </form>
+              <button 
+                onClick={handleSignOut} 
+                className="bg-red-600 px-6 py-2 rounded-xl text-white font-medium hover:bg-red-800">
+                  Yes
+              </button>
+            </div>
+        </div>
+       </dialog>
 
       {/* Modal for Orders */}
       <dialog id="order_modal" className="modal modal-bottom sm:modal-middle">

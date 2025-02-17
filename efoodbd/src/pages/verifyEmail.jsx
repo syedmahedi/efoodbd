@@ -43,7 +43,7 @@ const VerifyEmail = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-primary-content">
-      <div className="bg-gray-900 p-6 rounded-lg shadow-lg w-full max-w-md text-white">
+      <div className="bg-gray-900 p-6 rounded-lg shadow-lg w-full max-w-md text-primary">
         <h2 className="text-2xl font-bold text-center mb-4">Verify Your Email</h2>
         <p className="text-center text-gray-300">
           We have sent a verification link to your email. Please check your inbox.

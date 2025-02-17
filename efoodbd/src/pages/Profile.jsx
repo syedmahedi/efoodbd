@@ -80,7 +80,6 @@ const Profile = () => {
   };
 
   const handleDeletePost = async (postId) => {
-    if (window.confirm("Are you sure you want to delete this post?")) {
         try {
             const response = await fetch(`http://localhost:5000/api/foodPosts/${postId}`, {
                 method: "DELETE",
@@ -91,7 +90,6 @@ const Profile = () => {
             setMessage("Failed to delete post.");
             setMessageType("error");
         }
-    }
 };
 
 
@@ -265,7 +263,7 @@ const Profile = () => {
             </div>
 
             {/* Edit Profile Modal */}
-            <dialog id="editProfileModal" className="modal">
+            <dialog id="editProfileModal" className="modal bg-primary-content bg-opacity-60">
               <div className="modal-box bg-primary-content shadow-sm shadow-primary">
                 <form method="dialog">
                   <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
@@ -289,7 +287,7 @@ const Profile = () => {
 
             {/* Create Post Modal (Only for Sellers) */}
             {profileData.role === "Seller" && (
-              <dialog id="my_modal_1" className="modal">
+              <dialog id="my_modal_1" className="modal bg-primary-content bg-opacity-60">
                 <div className="modal-box bg-primary-content shadow-sm shadow-primary">
                   <form method="dialog">
                     <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
@@ -333,7 +331,6 @@ const Profile = () => {
                                 <dialog id="see_more" className="modal">
                                   <div className="modal-box bg-gray-900">
                                     <form method="dialog">
-                                      {/* if there is a button in form, it will close the modal */}
                                       <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                                     </form>
                                     <h3 className="font-bold text-center text-primary text-lg">Food Description</h3>
@@ -347,7 +344,24 @@ const Profile = () => {
                           </p>
                           <p className="text-xl mt-1 font-bold">৳{post.price}</p>
                           <p className="text-sm mt-1">{formatDate(post.created_at)}</p>
-                          <button onClick={() => handleDeletePost(post.id)} className="btn bg-red-600 text-white hover:bg-red-800 mt-4">Delete Post</button>
+                          <button onClick={() => document.getElementById('delete_modal').showModal()} className="btn bg-red-600 text-white hover:bg-red-800 mt-4">
+                            Delete Post
+                          </button>
+                          <dialog id="delete_modal" className="modal modal-bottom sm:modal-middle bg-primary-content bg-opacity-60">
+                            <div className="modal-box bg-gray-900 rounded-lg">
+                              <h3 className="font-bold text-lg text-center">Are you sure you want to <span className="text-primary">Delete</span> the post ?</h3>
+                              <div className="modal-action flex justify-center gap-4">
+                                <form method="dialog">
+                                  <button className="bg-gray-200 px-6 py-2 rounded-xl text-black font-medium hover:bg-gray-400">No</button>
+                                </form>
+                                <button 
+                                  onClick={() => handleDeletePost(post.id)}
+                                  className="bg-red-600 px-6 py-2 rounded-xl text-white font-medium hover:bg-red-800">
+                                  Yes
+                                </button>
+                              </div>
+                            </div>
+                          </dialog>
                         </div>
                       </div>
                     ))
@@ -361,12 +375,16 @@ const Profile = () => {
         </div>
         {/* Terms and Conditions Modal */}
         {showModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-gray-900 p-6 rounded-lg shadow-lg w-96 max-h-[80vh] overflow-y-auto">
-            <h2 className="text-xl font-bold mb-4">Terms & Conditions</h2>
+          <div className="fixed inset-0 bg-primary-content bg-opacity-70 flex items-center justify-center z-50">
+          <div className="bg-gray-900 p-6 rounded-lg shadow-lg max-w-full h-auto mx-4 overflow-y-auto">
+            <h2 className="text-xl font-bold mb-4 text-center text-primary">Terms & Conditions</h2>
             <p className="text-sm mb-4">
-              XFoodBD শুধুমাত্র ক্রেতা ও বিক্রেতাদের সংযোগ স্থাপন করে, কিন্তু কোনো লেনদেনের জন্য দায়ী নয়।  
-              আমাদের প্ল্যাটফর্ম ব্যবহার করার মাধ্যমে, আপনি সম্মত হচ্ছেন যে XFoodBD কোনো পেমেন্ট, ডেলিভারি বা প্রতারণার দায় নেবে না।  
+                <ul className="list-disc list-inside text-sm text-gray-400 space-y-2">
+                  <li><strong>XFoodBD</strong> একটি মধ্যস্থতাকারী প্ল্যাটফর্ম যা ক্রেতা ও বিক্রেতাদের সংযোগ স্থাপন করে; আমরা কোনো লেনদেন, অর্থপ্রদান বা ডেলিভারির জন্য দায়ী নই।</li>
+                  <li>সকল লেনদেন ব্যবহারকারীদের ব্যক্তিগত দায়িত্ব, এবং প্রতারণা, পেমেন্ট বা বিতরণ সংক্রান্ত সমস্যা <strong>XFoodBD</strong>-এর আওতাভুক্ত নয়।</li>
+                  <li>ব্যবহারকারীদের অবশ্যই <strong>সঠিক ও বৈধ তথ্য</strong> প্রদান করতে হবে, এবং প্রতারণামূলক কার্যকলাপে লিপ্ত হওয়া সম্পূর্ণ নিষিদ্ধ।</li>
+                  <li><strong>XFoodBD</strong> প্রতারক কার্যকলাপ শনাক্তকরণ ও প্রতিরোধের জন্য তথ্য সংগ্রহ ও বিশ্লেষণ করতে পারে, যা গোপনীয়তা নীতির অধীনে সংরক্ষিত থাকবে।</li>
+                </ul>
             </p>
             <button
               onClick={() => {

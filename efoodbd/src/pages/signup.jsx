@@ -63,7 +63,7 @@ const SignUp = () => {
     <div className="min-h-screen bg-primary-content flex items-center justify-center">
       <form
         onSubmit={handleSignUp}
-        className="bg-gray-900 p-6 rounded-lg w-full max-w-md"
+        className="bg-gray-900 p-6 rounded-lg w-full max-w-md mx-2"
       >
         <h2 className="text-2xl font-bold mb-6 text-center text-primary">Sign Up</h2>
         {message && <p className="fixed top-6 left-0 right-0 z-50 text-red-500 mb-4 text-center">{message}</p>}
