@@ -294,7 +294,7 @@ const Profile = () => {
                   <form method="dialog">
                     <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                   </form>
-                  <form onSubmit={handlePostSubmit} className="space-y-4 mt-8">
+                  <form onSubmit={handlePostSubmit} className="space-y-4">
                     <h3 className="text-lg font-bold text-primary text-center">Create Post</h3>
                     <input type="text" name="title" placeholder="Title (e.g. Home Cooked Biryani)" value={newPost.title} onChange={handlePostChange} className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900" />
                     <textarea name="description" placeholder="Description (e.g. Ingredients, Quantity, etc)" value={newPost.description} onChange={handlePostChange} className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900" rows="4"></textarea>
@@ -316,11 +316,35 @@ const Profile = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
                   {foodPosts.length > 0 ? (
                     foodPosts.map((post) => (
-                      <div key={post.id} className="rounded-2xl shadow-sm hover:shadow-md hover:shadow-gray-500 shadow-gray-500 overflow-hidden">
+                      <div key={post.id} className="rounded-2xl shadow-sm hover:shadow-md hover:shadow-gray-500 shadow-gray-500 max-h-fit overflow-hidden">
                         <img src={`http://localhost:5000${post.food_image}`} alt={post.title} className="w-full h-44 object-cover" />
                         <div className="p-4 bg-gray-900 rounded-lg">
                           <h4 className="text-lg font-bold text-primary">{post.title}</h4>
-                          <p className="text-sm mt-1">{post.description}</p>
+                          <p className="text-sm mt-2 line-clamp-2 group-hover:line-clamp-none transition-all duration-300">
+                            {post.description.length > 25 ? (
+                              <>
+                                {post.description.substring(0, 35)}...
+                                <button
+                                  className="text-primary hover:underline ml-1"
+                                  onClick={()=>document.getElementById('see_more').showModal()}
+                                >
+                                  See more
+                                </button>
+                                <dialog id="see_more" className="modal">
+                                  <div className="modal-box bg-gray-900">
+                                    <form method="dialog">
+                                      {/* if there is a button in form, it will close the modal */}
+                                      <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                                    </form>
+                                    <h3 className="font-bold text-center text-primary text-lg">Food Description</h3>
+                                    <p className="py-4">{post.description}</p>
+                                  </div>
+                                </dialog>
+                              </>
+                            ) : (
+                              post.description
+                            )}
+                          </p>
                           <p className="text-xl mt-1 font-bold">৳{post.price}</p>
                           <p className="text-sm mt-1">{formatDate(post.created_at)}</p>
                           <button onClick={() => handleDeletePost(post.id)} className="btn bg-red-600 text-white hover:bg-red-800 mt-4">Delete Post</button>

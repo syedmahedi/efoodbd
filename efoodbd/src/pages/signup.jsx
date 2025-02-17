@@ -63,25 +63,25 @@ const SignUp = () => {
     <div className="min-h-screen bg-primary-content flex items-center justify-center">
       <form
         onSubmit={handleSignUp}
-        className="bg-primary-content p-6 rounded shadow-md shadow-primary w-full max-w-md"
+        className="bg-gray-900 p-6 rounded-lg w-full max-w-md"
       >
         <h2 className="text-2xl font-bold mb-6 text-center text-primary">Sign Up</h2>
         {message && <p className="fixed top-6 left-0 right-0 z-50 text-red-500 mb-4 text-center">{message}</p>}
         
         <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)}
-          className="w-full p-2 border border-gray-800 bg-gray-900 rounded-lg"
+          className="w-full p-2 border border-gray-700 bg-gray-800 rounded-lg"
         />
         
         <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)}
-          className="w-full mt-4 p-2 border border-gray-800 bg-gray-900 rounded-lg"
+          className="w-full mt-4 p-2 border border-gray-700 bg-gray-800 rounded-lg"
         />
         
         <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}
-          className="w-full mt-4 p-2 border border-gray-800 bg-gray-900 rounded-lg"
+          className="w-full mt-4 p-2 border border-gray-700 bg-gray-800 rounded-lg"
         />
         
         <input type="text" placeholder="Phone Number" value={phone} onChange={(e) => setPhone(e.target.value)}
-          className={`w-full mt-4 p-2 border rounded-lg ${phone && !/^01[3-9][0-9]{8}$/.test(phone) ? "border-red-500" : "border-gray-800"} bg-gray-900`}
+          className={`w-full mt-4 p-2 border rounded-lg ${phone && !/^01[3-9][0-9]{8}$/.test(phone) ? "border-red-500" : "border-gray-700"} bg-gray-800`}
           required
         />
         {phone && !/^01[3-9][0-9]{8}$/.test(phone) && (
@@ -89,13 +89,13 @@ const SignUp = () => {
         )}
         
         <input type="text" placeholder="Location" value={location} onChange={(e) => setLocation(e.target.value)}
-          className="w-full mt-4 mb-2 p-2 border border-gray-800 bg-gray-900 rounded-lg"
+          className="w-full mt-4 mb-2 p-2 border border-gray-700 bg-gray-800 rounded-lg"
         />
 
         <div className="mb-4">
           <label className="block text-gray-500 font-bold mb-2">Choose Your Role:</label>
           <select value={role} onChange={(e) => setRole(e.target.value)}
-            className="w-full p-2 border border-gray-800 bg-gray-900 rounded-lg"
+            className="w-full p-2 border border-gray-700 bg-gray-800 rounded-lg"
           >
             <option value="" disabled hidden>Select Role</option>
             <option value="Buyer">Buyer</option>
@@ -106,16 +106,19 @@ const SignUp = () => {
         {role === "Seller" && (
           <input type="text" placeholder="Food Category (e.g., Cakes)" value={foodCategory}
             onChange={(e) => setFoodCategory(e.target.value)}
-            className="w-full mt-2 p-2 border border-gray-800 bg-gray-900 rounded-lg"
+            className="w-full mt-2 p-2 border border-gray-700 bg-gray-800 rounded-lg"
           />
         )}
 
         <button type="submit"
-          className="w-full bg-primary text-white p-2 rounded-lg hover:bg-hover font-semibold mt-6"
+          className="w-full bg-primary text-white p-2 rounded-lg hover:bg-hover font-semibold mt-3"
           disabled={!role || loading || !phone || !name || !location}
         >
           {loading ? <span className="loading loading-ring loading-md"></span> : "Sign Up"}
         </button>
+        <div className="text-center text-gray-700 text-sm mt-2">
+          &copy; {new Date().getFullYear()} XFoodBD.
+        </div>
       </form>
     </div>
   );

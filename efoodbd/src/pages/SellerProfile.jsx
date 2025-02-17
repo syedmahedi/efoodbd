@@ -8,6 +8,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/autoplay";
 import { Pagination,Autoplay } from "swiper/modules";
+import Footer from "../components/Footer";
 
 const SellerProfile = () => {
   const { id } = useParams();
@@ -298,7 +299,7 @@ const SellerProfile = () => {
               {posts.map((post) => (
                 <div
                 key={post.id}
-                className="relative shadow-sm shadow-gray-500 rounded-lg overflow-hidden group hover:shadow-md hover:shadow-gray-500 transition-all duration-300"
+                className="relative max-h-fit shadow-sm shadow-gray-500 rounded-lg overflow-hidden group hover:shadow-md hover:shadow-gray-500 transition-all duration-300"
               >
                 <div className="relative w-full h-48 overflow-hidden">
                   <img
@@ -312,18 +313,28 @@ const SellerProfile = () => {
                 </div>
                 <div className="p-4 bg-gray-900 rounded-lg">
                   <div className="flex justify-between items-start">
-                    <div className="max-w-[70%]">
+                    <div className="max-w-full">
                       <h4 className="text-lg font-bold text-primary">{post.title}</h4>
                       <p className="text-sm mt-2 line-clamp-2 group-hover:line-clamp-none transition-all duration-300">
                         {post.description.length > 25 ? (
                           <>
-                            {post.description.substring(0, 100)}...
+                            {post.description.substring(0, 20)}...
                             <button
                               className="text-primary hover:underline ml-1"
-                              onClick={() => alert(post.description)}
+                              onClick={()=>document.getElementById('see_more').showModal()}
                             >
                               See more
                             </button>
+                            <dialog id="see_more" className="modal">
+                              <div className="modal-box bg-gray-900">
+                                <form method="dialog">
+                                  {/* if there is a button in form, it will close the modal */}
+                                  <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                                </form>
+                                <h3 className="font-bold text-center text-primary text-lg">Food Description</h3>
+                                <p className="py-4">{post.description}</p>
+                              </div>
+                            </dialog>
                           </>
                         ) : (
                           post.description
@@ -332,7 +343,7 @@ const SellerProfile = () => {
                       <p className="text-sm mt-2">{formatDate(post.created_at)}</p>
                     </div>                  
                     <button
-                      className="mt-4 px-4 py-2 bg-primary hover:bg-hover text-white rounded-lg font-semibold self-end"
+                      className="mt-4 px-4 py-2 bg-primary hover:bg-hover text-white rounded-lg font-semibold self-end w-3/7"
                       onClick={() => handleOrderNow(post)}
                     >
                       Order Now
@@ -423,6 +434,7 @@ const SellerProfile = () => {
           </div>
         </div>
       )}
+      <Footer />
     </div>
   );
 };

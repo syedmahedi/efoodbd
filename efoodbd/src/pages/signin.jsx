@@ -57,7 +57,7 @@ const SignIn = () => {
     <div className="min-h-screen bg-primary-content flex items-center justify-center">
       <form
         onSubmit={handleSignIn}
-        className="bg-primary-content p-6 rounded text-white shadow-md shadow-primary w-full max-w-md"
+        className="bg-gray-900 p-6 rounded-lg text-white w-full max-w-md"
       >
         <h2 className="text-2xl font-bold mb-6 text-center text-primary">Sign In</h2>
         {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
@@ -90,6 +90,9 @@ const SignIn = () => {
         <p className="mt-4 text-center text-gray-400">
           Not verified? <span className="text-primary cursor-pointer" onClick={() => navigate("/verify-email")}>Verify Now</span>
         </p>
+        <div className="text-center text-gray-700 text-sm mt-2">
+          &copy; {new Date().getFullYear()} XFoodBD.
+        </div>
       </form>
     </div>
   );

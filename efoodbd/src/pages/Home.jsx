@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
-import SearchBar from "../components/SearchBar";
+import SearchBar from "../components/Searchbar";
 import SellerCard from "../components/SellerCard";
 import Footer from "../components/Footer";
 
@@ -9,11 +9,12 @@ const Home = () => {
   const [error, setError] = useState(""); // Error handling
 
   const location = localStorage.getItem("location"); // Get location from local storage
+  const email = localStorage.getItem("userEmail");
 
   // Fetch sellers based on location (initial load)
   const fetchSellersByLocation = async () => {
-    if (!location) {
-      setError("Location not found in local storage.");
+    if (!location || !email) {
+      setError("Location not found. Please Log in First.");
       return;
     }
     try {
@@ -29,8 +30,8 @@ const Home = () => {
 
   // Fetch sellers based on category
   const fetchSellersByCategory = async (category, location) => {
-    if (!location) {
-      setError("Location not found in local storage.");
+    if (!location || !email) {
+      setError("Location not found. Please Log in First.");
       return;
     }
     try {
@@ -88,7 +89,7 @@ const Home = () => {
 
       <div className="container mx-auto px-6 lg:px-0">
         <h2 className="text-2xl font-bold my-4 lg:mb-4 lg:my-0 text-primary">
-          Sellers in {location ? location.charAt(0).toUpperCase() + location.slice(1) : "your area"}
+          Sellers in {location ? location.charAt(0).toUpperCase() + location.slice(1) : "Your Area"}
         </h2>
         {/* Seller Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-base-content">
@@ -97,13 +98,13 @@ const Home = () => {
               <SellerCard key={seller.seller_id} seller={seller} />
             ))
           ) : (           
-            <p className="text-center col-span-3 text-gray-500"><span className="loading loading-spinner loading-md"></span>
-            <p className="text-center text-gray-500">No sellers found</p>
+            <p className="text-center col-span-3 text-gray-500">
+              <span className="loading loading-spinner loading-md"></span>
+              { !email ? <p className="text-center text-gray-500">{error}</p> : <p className="text-center text-gray-500">No sellers found</p> }
             </p>
           )}
         </div>       
       </div>
-
       <Footer />
     </div>
   );

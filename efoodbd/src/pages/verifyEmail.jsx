@@ -68,6 +68,9 @@ const VerifyEmail = () => {
             {loading ? "Resending..." : "Resend Verification Email"}
           </button>
         </div>
+        <div className="text-center text-gray-700 text-sm pt-4">
+          &copy; {new Date().getFullYear()} XFoodBD.
+        </div>
       </div>
     </div>
   );

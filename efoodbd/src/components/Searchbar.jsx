@@ -6,7 +6,7 @@ const SearchBar = ({ onSearch }) => {
 
   const handleSearch = (e) => {
     if (!location) {
-      alert("Location not set. Please allow location access.");
+      alert("Location not set. Please sign in first.");
       return;
     }
     const value = e.target.value;
