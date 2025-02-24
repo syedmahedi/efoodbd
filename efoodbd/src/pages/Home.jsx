@@ -73,7 +73,7 @@ const Home = () => {
         <div className="container mx-auto text-center lg:text-center">
           <h1 className="text-3xl mt-4 sm:text-5xl text-white font-bangla leading-relaxed font-semibold sm:font-normal">
             নিজের এলাকায় গড়ে তুলুন{" "}
-            <p className="text-primary sm:leading-relaxed">আপনার ব্যবসা</p>
+            <p className="text-primary leading-tight sm:leading-relaxed pb-3 sm:pb-0">আপনার ব্যবসা</p>
           </h1>
           <p className="text-md sm:text-lg text-gray-300 font-light font-bangla mb-4">
             আপনার ঘরের তৈরি খাবার পৌঁছে দিন সবার কাছে !
