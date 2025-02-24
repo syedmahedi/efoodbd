@@ -188,7 +188,7 @@ const SellerProfile = () => {
   }
 
   return (
-    <div className="bg-primary-content min-h-screen">
+    <div className="bg-bgprimary text-gray-400 min-h-screen">
       {/* Message */}
       <AnimatePresence>
         {message && (
@@ -208,7 +208,7 @@ const SellerProfile = () => {
       <Header />
       <div className="max-w-6xl mx-auto p-6 rounded-lg">
         {/* Seller Information */}
-        <div className="flex flex-col lg:flex-row items-center lg:items-start space-y-6 lg:space-y-0 lg:space-x-12 bg-primary-content p-6 rounded-lg shadow-md">
+        <div className="flex flex-col lg:flex-row items-center lg:items-start space-y-6 lg:space-y-0 lg:space-x-12 bg-bgprimary p-6 rounded-lg">
           {/* Profile Image */}
           <div className="w-32 h-32 sm:w-36 sm:h-36 rounded-full bg-gray-200 border-4 border-primary overflow-hidden flex-shrink-0">
             <img
@@ -236,7 +236,7 @@ const SellerProfile = () => {
           </div>
 
           {/* Seller Stats */}
-          <div className="grid grid-cols-2 gap-12  bg-primary-content p-4 rounded-lg w-full max-w-xs">
+          <div className="grid grid-cols-2 gap-12  bg-bgprimary p-4 rounded-lg w-full max-w-xs">
             <div className="text-center">
               <p className="stat-title text-gray-500 font-semibold">Total Orders</p>
               <p className="stat-value text-primary text-3xl font-bold">{stats.total_orders}</p>
@@ -307,7 +307,7 @@ const SellerProfile = () => {
                     alt={post.title}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 group-hover:blur-sm"
                   />
-                  <div className="absolute inset-0 flex items-center justify-center bg-primary-content bg-opacity-60 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div className="absolute inset-0 flex items-center justify-center bg-bgprimary bg-opacity-60 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                     <p className="text-white text-2xl font-bold">৳{post.price} BDT</p>
                   </div>
                 </div>
@@ -361,8 +361,8 @@ const SellerProfile = () => {
 
       {/* Order Modal */}
       {orderModalOpen && (
-        <div className="fixed inset-0 bg-primary-content bg-opacity-70 flex items-center justify-center z-50">
-          <div className="bg-primary-content p-6 rounded-lg max-w-md w-full shadow-sm shadow-primary">
+        <div className="fixed inset-0 bg-bgprimary bg-opacity-70 flex items-center justify-center z-50">
+          <div className="bg-bgprimary text-gray-400 p-6 rounded-lg max-w-md w-full shadow-sm shadow-primary">
             <h2 className="text-lg text-center font-bold">Order: <span className="text-primary">{selectedPost.title}</span></h2>
 
             {/* Quantity Field */}

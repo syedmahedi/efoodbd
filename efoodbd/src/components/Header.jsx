@@ -185,8 +185,8 @@ const Header = () => {
       </div>
 
       {/* modal for signout */}
-      <dialog id="signout_modal" className="modal modal-bottom sm:modal-middle bg-primary-content bg-opacity-60">
-        <div className="modal-box bg-gray-900 rounded-lg">
+      <dialog id="signout_modal" className="modal modal-bottom sm:modal-middle bg-bgprimary bg-opacity-70">
+        <div className="modal-box bg-bgprimary text-gray-400 rounded-lg">
           <h3 className="font-bold text-lg text-center">Are you sure you want to <span className="text-primary">sign out</span> ?</h3>
             <div className="modal-action flex justify-center gap-4">
               <form method="dialog">
@@ -203,7 +203,7 @@ const Header = () => {
 
       {/* Modal for Orders */}
       <dialog id="order_modal" className="modal modal-bottom sm:modal-middle">
-        <div className="modal-box bg-primary-content shadow-sm shadow-primary rounded-lg">
+        <div className="modal-box bg-bgprimary text-gray-400 shadow-sm shadow-primary rounded-lg">
           <h2 className="font-bold text-xl text-primary text-center">Your Orders</h2>
           <div className="max-h-60 overflow-y-auto mt-2">
             {orders.length > 0 ? (

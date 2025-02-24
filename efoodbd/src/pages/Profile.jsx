@@ -195,7 +195,7 @@ const Profile = () => {
   if (!profileData) return <div className="flex justify-center items-center mt-12"><span className="loading loading-dots loading-md"></span></div>
 
   return (
-    <div className="bg-primary-content min-h-screen">
+    <div className="bg-bgprimary min-h-screen">
       {/* Message */}
       <AnimatePresence>
         {message && (
@@ -219,7 +219,7 @@ const Profile = () => {
             <div>
             <div className="flex flex-col lg:flex-row items-center lg:justify-between">
               {/* Profile Data */}
-              <div className="lg:w-1/2 text-center lg:text-left mb-4 lg:mb-0">
+              <div className="lg:w-1/2 text-center lg:text-left text-gray-500 mb-4 lg:mb-0">
                 <p><strong>Email:</strong> {profileData.email}</p>
                 <p><strong>Phone:</strong> {profileData.phone}</p>
                 <p><strong>Your ID:</strong> {profileData.id}</p>
@@ -263,10 +263,10 @@ const Profile = () => {
             </div>
 
             {/* Edit Profile Modal */}
-            <dialog id="editProfileModal" className="modal bg-primary-content bg-opacity-60">
-              <div className="modal-box bg-primary-content shadow-sm shadow-primary">
+            <dialog id="editProfileModal" className="modal bg-bgprimary bg-opacity-60">
+              <div className="modal-box bg-bgprimary text-gray-400 shadow-sm shadow-primary">
                 <form method="dialog">
-                  <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                  <button className="btn btn-sm btn-circle btn-ghost absolute right-2 hover:bg-slate-800 top-2">✕</button>
                 </form>
                 <form onSubmit={handleProfileUpdate} className="space-y-4">
                   <h3 className="text-lg font-bold text-primary text-center">Edit Profile</h3>
@@ -277,9 +277,9 @@ const Profile = () => {
                   <input type="text" name="occupation" value={formData.occupation || ""} onChange={handleInputChange} placeholder="Occupation" className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900" />
                   <textarea name="bio" value={formData.bio || ""} onChange={handleInputChange} placeholder="Describe yourself" className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900" rows="3"></textarea>
                   <p>Upload your Profile Picture (Max 2Mb)</p>
-                  <input type="file" name="profilePicture" onChange={handleInputChange} className="w-full p-1 rounded-lg border border-gray-800 bg-gray-900" accept="image/*" />
+                  <input type="file" name="profilePicture" onChange={handleInputChange} className="w-full p-1.5 rounded-lg bg-gray-900" accept="image/*" />
                   <div className="flex justify-end">
-                    <button type="submit" className="btn bg-primary hover:bg-hover text-white px-12 rounded-xl">Save</button>
+                    <button type="submit" className="bg-primary px-12 py-2.5 rounded-xl text-white font-medium hover:bg-hover">Save</button>
                   </div>
                 </form>
               </div>
@@ -287,8 +287,8 @@ const Profile = () => {
 
             {/* Create Post Modal (Only for Sellers) */}
             {profileData.role === "Seller" && (
-              <dialog id="my_modal_1" className="modal bg-primary-content bg-opacity-60">
-                <div className="modal-box bg-primary-content shadow-sm shadow-primary">
+              <dialog id="my_modal_1" className="modal bg-bgprimary bg-opacity-60">
+                <div className="modal-box bg-bgprimary text-gray-400 shadow-sm shadow-primary">
                   <form method="dialog">
                     <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                   </form>
@@ -297,10 +297,10 @@ const Profile = () => {
                     <input type="text" name="title" placeholder="Title (e.g. Home Cooked Biryani)" value={newPost.title} onChange={handlePostChange} className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900" />
                     <textarea name="description" placeholder="Description (e.g. Ingredients, Quantity, etc)" value={newPost.description} onChange={handlePostChange} className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900" rows="4"></textarea>
                     <p>Upload Your Food Image</p>
-                    <input type="file" name="foodImage" onChange={handlePostChange} className="w-full rounded-lg border p-1 border-gray-800 bg-gray-900" accept="image/*" />
+                    <input type="file" name="foodImage" onChange={handlePostChange} className="w-full rounded-lg border p-1.5 border-gray-800 bg-gray-900" accept="image/*" />
                     <input type="number" name="price" placeholder="Price (in BDT)" value={newPost.price} onChange={handlePostChange} className="w-full p-2 rounded-lg border border-gray-800 bg-gray-900" />
                     <div className="flex justify-end">
-                      <button type="submit" className="btn bg-primary hover:bg-hover text-white px-12 rounded-xl">Post</button>
+                      <button type="submit" className="bg-primary px-12 py-2.5 rounded-xl text-white font-medium hover:bg-hover">Post</button>
                     </div>
                   </form>
                 </div>
@@ -309,7 +309,7 @@ const Profile = () => {
 
             {/* Your Posts Section */}
             {profileData.role === "Seller" && (
-              <div>
+              <div className="text-gray-400">
                 <h3 className="text-2xl font-semibold mt-8 text-primary">Your Posts</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
                   {foodPosts.length > 0 ? (
@@ -344,7 +344,7 @@ const Profile = () => {
                           </p>
                           <p className="text-xl mt-1 font-bold">৳{post.price}</p>
                           <p className="text-sm mt-1">{formatDate(post.created_at)}</p>
-                          <button onClick={() => document.getElementById('delete_modal').showModal()} className="btn bg-red-600 text-white hover:bg-red-800 mt-4">
+                          <button onClick={() => document.getElementById('delete_modal').showModal()} className="px-4 py-2.5 rounded-xl font-medium bg-red-600 text-white hover:bg-red-800 mt-4">
                             Delete Post
                           </button>
                           <dialog id="delete_modal" className="modal modal-bottom sm:modal-middle bg-primary-content bg-opacity-60">
@@ -375,7 +375,7 @@ const Profile = () => {
         </div>
         {/* Terms and Conditions Modal */}
         {showModal && (
-          <div className="fixed inset-0 bg-primary-content bg-opacity-70 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-bgprimary bg-opacity-70 flex items-center justify-center z-50">
           <div className="bg-gray-900 p-6 rounded-lg shadow-lg max-w-full h-auto mx-4 overflow-y-auto">
             <h2 className="text-xl font-bold mb-4 text-center text-primary">Terms & Conditions</h2>
             <p className="text-sm mb-4">

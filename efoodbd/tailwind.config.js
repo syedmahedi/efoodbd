@@ -11,6 +11,7 @@ export default {
       },
       colors: {
         primary: '#FC8934',
+        bgprimary: '#050617',
         hover: '#B66326',
         gold: '#ffcc00'// Your custom primary color
       },
