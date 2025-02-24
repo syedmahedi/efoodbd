@@ -54,7 +54,7 @@ const SignIn = () => {
   };
 
   return (
-    <div className="min-h-screen bg-primary-content flex items-center justify-center">
+    <div className="min-h-screen bg-bgprimary flex items-center justify-center">
       <form
         onSubmit={handleSignIn}
         className="bg-gray-900 mx-2 p-6 rounded-lg text-white w-full max-w-md"

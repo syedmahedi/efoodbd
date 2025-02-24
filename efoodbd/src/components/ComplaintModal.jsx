@@ -95,7 +95,7 @@ const ComplaintModal = ({ onClose }) => {
         )}
       </AnimatePresence>
       <dialog id="complaint_modal" className="modal modal-bottom sm:modal-middle">
-        <div className="modal-box bg-primary-content p-6 rounded-lg shadow-sm shadow-primary">
+        <div className="modal-box bg-bgprimary p-6 rounded-lg shadow-sm shadow-primary">
           <h2 className="text-2xl text-center text-primary font-bold mb-4">Submit a Review</h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
