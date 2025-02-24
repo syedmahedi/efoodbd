@@ -27,8 +27,8 @@ const Header = () => {
       localStorage.removeItem("location");
       localStorage.removeItem("termsAccepted");
       document.getElementById("signout_modal").close();
-      navigate("/");
-      window.location.reload();
+      navigate("/signin");
+      
     } catch (error) {
       console.error("Error signing out:", error);
     }

@@ -90,7 +90,7 @@ const SignIn = () => {
         <p className="mt-4 text-center text-gray-400">
           Not verified? <span className="text-primary cursor-pointer" onClick={() => navigate("/verify-email")}>Verify Now</span>
         </p>
-        <div className="text-center text-gray-700 text-sm mt-2">
+        <div className="text-center text-gray-700 text-sm pt-1">
           &copy; {new Date().getFullYear()} XFoodBD.
         </div>
       </form>

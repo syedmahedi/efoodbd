@@ -14,7 +14,7 @@ const Home = () => {
   // Fetch sellers based on location (initial load)
   const fetchSellersByLocation = async () => {
     if (!location || !email) {
-      setError("Location not found. Please Log in First.");
+      setError("Location not found. Please Sign in First.");
       return;
     }
     try {
@@ -28,10 +28,11 @@ const Home = () => {
     }
   };
 
+
   // Fetch sellers based on category
   const fetchSellersByCategory = async (category, location) => {
     if (!location || !email) {
-      setError("Location not found. Please Log in First.");
+      setError("Location not found. Please Sign in First.");
       return;
     }
     try {
