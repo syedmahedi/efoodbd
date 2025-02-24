@@ -75,7 +75,7 @@ const Home = () => {
             নিজের এলাকায় গড়ে তুলুন{" "}
             <p className="text-primary leading-tight sm:leading-relaxed pb-3 sm:pb-0">আপনার ব্যবসা</p>
           </h1>
-          <p className="text-md sm:text-lg text-gray-300 font-light font-bangla mb-4">
+          <p className="text-md sm:text-lg text-gray-300 font-light font-bangla mb-2 sm:mb-4">
             আপনার ঘরের তৈরি খাবার পৌঁছে দিন সবার কাছে !
           </p>
           {/* Search Bar */}
@@ -84,7 +84,7 @@ const Home = () => {
 
         {/* Right Image */}
         <div className="flex justify-center lg:justify-center w-full lg:w-3/4">
-          <img src="home.png" alt="Home" className="w-full max-w-80 lg:max-w-sm h-auto" />
+          <img src="home.png" alt="Home" className="w-full max-w-72 lg:max-w-sm h-auto" />
         </div>
       </div>
 

@@ -138,7 +138,7 @@ const Header = () => {
 
         {/* Mobile Dropdown */}
         {menuOpen && (
-          <nav className="sm:hidden absolute top-8 right-0 bg-primary-content rounded-xl p-6 mb-4 pb-8">
+          <nav className="sm:hidden absolute top-8 right-0 bg-bgprimary rounded-xl p-6 mb-4 pb-8">
             <ul className="flex flex-col gap-6 text-center">
               {!user ? (
                 <>
