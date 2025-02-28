@@ -117,7 +117,7 @@ const SignUp = () => {
           {loading ? <span className="loading loading-ring loading-md"></span> : "Sign Up"}
         </button>
         <div className="text-center text-gray-700 text-sm pt-4">
-          &copy; {new Date().getFullYear()} XFoodBD.
+          &copy; {new Date().getFullYear()} eFoodBD.
         </div>
       </form>
     </div>

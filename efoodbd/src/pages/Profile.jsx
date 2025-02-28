@@ -16,6 +16,9 @@ const Profile = () => {
   const [messageType, setMessageType] = useState(null);
   const location = useLocation();
   const [showModal, setShowModal] = useState(false);
+  const [stats, setStats] = useState({ total_orders: 0, total_sales: 0 });
+
+  const id=localStorage.getItem("userId");
   
 
   useEffect(() => {
@@ -57,8 +60,23 @@ const Profile = () => {
       }
     };
 
+    const fetchStats = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/seller-stats/${id}}`);
+        if (!response.ok) throw new Error("Failed to fetch stats");
+
+        const data = await response.json();
+        setStats(data);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+    if (id) {
+      fetchStats();
+    }
+
     fetchProfileData();
-  }, [navigate, profileData?.id, location.state]);
+  }, [navigate, profileData?.id, location.state, id]);
 
   const fetchFoodPosts = async (sellerId) => {
     try {
@@ -70,6 +88,8 @@ const Profile = () => {
       setError(err.message);
     }
   };
+
+  
 
   const handlePostChange = (e) => {
     const { name, value, files } = e.target;
@@ -214,7 +234,7 @@ const Profile = () => {
       </AnimatePresence>
       <Header />
       <div className="container mx-auto py-8">
-        <div className="max-w-6xl p-6 mx-auto">
+        <div className="max-w-6xl sm:p-6 mx-auto">
           <h2 className="text-3xl font-bold mb-4 text-primary text-center lg:text-left"><h1>{profileData.name}</h1></h2>
             <div>
             <div className="flex flex-col lg:flex-row items-center lg:justify-between">
@@ -228,6 +248,17 @@ const Profile = () => {
                 <p><strong>Occupation:</strong> {profileData.occupation}</p>
                 <p><strong>Role:</strong> {profileData.role}</p>
                 <p><strong>Bio:</strong> {profileData.bio}</p>
+              </div>
+              {/* Seller Stats */}
+              <div className="grid grid-cols-2 gap-12  bg-bgprimary sm:p-4 pb-6 sm:pb-0 rounded-lg w-full max-w-xs">
+                <div className="text-center">
+                  <p className="stat-title text-gray-500 font-semibold">Total Orders</p>
+                  <p className="stat-value text-primary text-3xl font-bold">{stats.total_orders}</p>
+                </div>
+                <div className="text-center">
+                  <p className="stat-title text-gray-500 font-semibold">Total Sales</p>
+                  <p className="stat-value text-primary text-3xl font-bold">৳{stats.total_sales} BDT</p>
+                </div>
               </div>
               {/* Profile Picture */}
               <div className="lg:w-1/2 flex justify-center mb-4 lg:mb-0">
@@ -380,10 +411,10 @@ const Profile = () => {
             <h2 className="text-xl font-bold mb-4 text-center text-primary">Terms & Conditions</h2>
             <p className="text-sm mb-4">
                 <ul className="list-disc list-inside text-sm text-gray-400 space-y-2">
-                  <li><strong>XFoodBD</strong> একটি মধ্যস্থতাকারী প্ল্যাটফর্ম যা ক্রেতা ও বিক্রেতাদের সংযোগ স্থাপন করে; আমরা কোনো লেনদেন, অর্থপ্রদান বা ডেলিভারির জন্য দায়ী নই।</li>
-                  <li>সকল লেনদেন ব্যবহারকারীদের ব্যক্তিগত দায়িত্ব, এবং প্রতারণা, পেমেন্ট বা বিতরণ সংক্রান্ত সমস্যা <strong>XFoodBD</strong>-এর আওতাভুক্ত নয়।</li>
+                  <li><strong>eFoodBD</strong> একটি মধ্যস্থতাকারী প্ল্যাটফর্ম যা ক্রেতা ও বিক্রেতাদের সংযোগ স্থাপন করে; আমরা কোনো লেনদেন, অর্থপ্রদান বা ডেলিভারির জন্য দায়ী নই।</li>
+                  <li>সকল লেনদেন ব্যবহারকারীদের ব্যক্তিগত দায়িত্ব, এবং প্রতারণা, পেমেন্ট বা বিতরণ সংক্রান্ত সমস্যা <strong>eFoodBD</strong>-এর আওতাভুক্ত নয়।</li>
                   <li>ব্যবহারকারীদের অবশ্যই <strong>সঠিক ও বৈধ তথ্য</strong> প্রদান করতে হবে, এবং প্রতারণামূলক কার্যকলাপে লিপ্ত হওয়া সম্পূর্ণ নিষিদ্ধ।</li>
-                  <li><strong>XFoodBD</strong> প্রতারক কার্যকলাপ শনাক্তকরণ ও প্রতিরোধের জন্য তথ্য সংগ্রহ ও বিশ্লেষণ করতে পারে, যা গোপনীয়তা নীতির অধীনে সংরক্ষিত থাকবে।</li>
+                  <li><strong>eFoodBD</strong> প্রতারক কার্যকলাপ শনাক্তকরণ ও প্রতিরোধের জন্য তথ্য সংগ্রহ ও বিশ্লেষণ করতে পারে, যা গোপনীয়তা নীতির অধীনে সংরক্ষিত থাকবে।</li>
                 </ul>
             </p>
             <button

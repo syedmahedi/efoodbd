@@ -530,7 +530,7 @@ app.post("/api/send-order-email", async (req, res) => {
         </table>
         <p>Check your dashboard for more details.</p>
         <p>Best regards,</p>
-        <p><strong>XFoodBD Team</strong></p>
+        <p><strong>eFoodBD Team</strong></p>
         <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">       
         <p style="text-align: center; font-size: 14px;">Follow us on:</p>
         <p style="text-align: center;">
@@ -544,7 +544,7 @@ app.post("/api/send-order-email", async (req, res) => {
             <img src="https://cdn-icons-png.flaticon.com/128/1384/1384031.png" alt="Instagram" width="24">
           </a>
         </p>
-        <p style="text-align: center; font-size: 12px; color: #666;">&copy; 2025 XFoodBD. All rights reserved.</p>
+        <p style="text-align: center; font-size: 12px; color: #666;">&copy; 2025 eFoodBD. All rights reserved.</p>
       </div>
      `,
 

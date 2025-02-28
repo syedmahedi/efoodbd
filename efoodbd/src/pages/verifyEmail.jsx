@@ -69,7 +69,7 @@ const VerifyEmail = () => {
           </button>
         </div>
         <div className="text-center text-gray-700 text-sm pt-4">
-          &copy; {new Date().getFullYear()} XFoodBD.
+          &copy; {new Date().getFullYear()} eFoodBD.
         </div>
       </div>
     </div>

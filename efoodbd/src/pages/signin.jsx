@@ -91,7 +91,7 @@ const SignIn = () => {
           Not verified? <span className="text-primary cursor-pointer" onClick={() => navigate("/verify-email")}>Verify Now</span>
         </p>
         <div className="text-center text-gray-700 text-sm pt-1">
-          &copy; {new Date().getFullYear()} XFoodBD.
+          &copy; {new Date().getFullYear()} eFoodBD.
         </div>
       </form>
     </div>

@@ -208,7 +208,7 @@ const SellerProfile = () => {
       <Header />
       <div className="max-w-6xl mx-auto p-6 rounded-lg">
         {/* Seller Information */}
-        <div className="flex flex-col lg:flex-row items-center lg:items-start space-y-6 lg:space-y-0 lg:space-x-12 bg-bgprimary p-6 rounded-lg">
+        <div className="flex flex-col lg:flex-row items-center lg:items-start space-y-6 lg:space-y-0 lg:space-x-12 bg-bgprimary sm:p-6 rounded-lg">
           {/* Profile Image */}
           <div className="w-32 h-32 sm:w-36 sm:h-36 rounded-full bg-gray-200 border-4 border-primary overflow-hidden flex-shrink-0">
             <img
@@ -236,19 +236,19 @@ const SellerProfile = () => {
           </div>
 
           {/* Seller Stats */}
-          <div className="grid grid-cols-2 gap-12  bg-bgprimary p-4 rounded-lg w-full max-w-xs">
+          <div className="bg-bgprimary pb-4 sm:p-2 rounded-lg">
             <div className="text-center">
               <p className="stat-title text-gray-500 font-semibold">Total Orders</p>
               <p className="stat-value text-primary text-3xl font-bold">{stats.total_orders}</p>
             </div>
-            <div className="text-center">
+            {/* <div className="text-center">
               <p className="stat-title text-gray-500 font-semibold">Total Sales</p>
               <p className="stat-value text-primary text-3xl font-bold">৳{stats.total_sales} BDT</p>
-            </div>
+            </div> */}
           </div>
         </div>
         {/* review section */}
-        <div className="flex items-center lg:justify-start justify-center mx-auto px-6">
+        <div className="flex items-center lg:justify-start justify-center mx-auto px-6 mt-2 sm:mt-0">
           <ComplaintModal />
         </div>
         {/* Seller Reviews */}

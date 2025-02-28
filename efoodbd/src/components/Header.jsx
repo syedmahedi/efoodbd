@@ -82,7 +82,7 @@ const Header = () => {
     <header className="py-4 px-2 m-auto">
       <div className="container mx-auto flex justify-between items-center relative">
       <Link to="/" className="relative text-3xl font-bold text-primary hover:text-hover">
-        XFood
+        eFood
         <span className="absolute -top-1.5 -right-6 text-[12px] font-bold  text-white px-1">
           BD
         </span>
