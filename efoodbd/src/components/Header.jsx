@@ -10,6 +10,8 @@ const Header = () => {
   const [orders, setOrders] = useState([]);
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const [copied, setCopied] = useState(false);
+
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -116,6 +118,25 @@ const Header = () => {
                     <img src="/notification.png" alt="notification" className="h-7 w-7 cursor-pointer" />
                   </button>
                   )}
+                  {role === "Seller" && (
+                    <div className="relative">
+                      <button
+                        className="border px-3 py-2 rounded-xl text-white font-medium"
+                        onClick={() => {
+                          navigator.clipboard.writeText("http://localhost:5173/seller/" + localStorage.getItem("userId"));
+                          setCopied(true);
+                          setTimeout(() => setCopied(false), 2000);
+                        }}
+                      >
+                        Share Profile
+                      </button>
+                      {copied && (
+                        <div className="absolute text-green-500 py-2 rounded-md text-center">
+                          Your Profile link copied!
+                        </div>
+                      )}
+                    </div>
+                  )}                 
                   <button className="bg-primary px-4 py-2 rounded-xl text-white font-medium hover:bg-hover" onClick={handleProfileClick}>
                     My Profile
                   </button>
@@ -166,6 +187,25 @@ const Header = () => {
                       </button>                   
                     </li>
                   )}
+                  {role === "Seller" && (
+                    <div className="">
+                      <button
+                        className="border px-3 py-2 rounded-xl text-white font-medium"
+                        onClick={() => {
+                          navigator.clipboard.writeText("http://localhost:5173/seller/" + localStorage.getItem("userId"));
+                          setCopied(true);
+                          setTimeout(() => setCopied(false), 2000);
+                        }}
+                      >
+                        Share Profile
+                      </button>
+                      {copied && (
+                        <div className="absolute text-green-500 rounded-md text-center">
+                          Profile link copied!
+                        </div>
+                      )}
+                    </div>
+                  )} 
                   <li>
                     <button className="w-full bg-primary px-4 py-2 rounded-xl text-white font-medium hover:bg-hover" onClick={handleProfileClick}>
                       My Profile

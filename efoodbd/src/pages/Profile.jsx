@@ -17,7 +17,6 @@ const Profile = () => {
   const location = useLocation();
   const [showModal, setShowModal] = useState(false);
   const [stats, setStats] = useState({ total_orders: 0, total_sales: 0 });
-
   const id=localStorage.getItem("userId");
   
 
@@ -250,7 +249,7 @@ const Profile = () => {
                 <p><strong>Bio:</strong> {profileData.bio}</p>
               </div>
               {/* Seller Stats */}
-              <div className="grid grid-cols-2 gap-12  bg-bgprimary sm:p-4 pb-6 sm:pb-0 rounded-lg w-full max-w-xs">
+              <div className="grid grid-cols-2 gap-12  bg-bgprimary sm:p-4 pb-8 sm:pb-0 rounded-lg w-full max-w-xs">
                 <div className="text-center">
                   <p className="stat-title text-gray-500 font-semibold">Total Orders</p>
                   <p className="stat-value text-primary text-3xl font-bold">{stats.total_orders}</p>
@@ -291,6 +290,14 @@ const Profile = () => {
                   Create Post
                 </button>
               )}
+              {/* {profileData.role === "Seller" && (
+                <button
+                  className="bg-primary px-4 py-2.5 rounded-xl text-white font-medium hover:bg-hover"
+                  onClick={() => navigate("/orders")}
+                >
+                  Share Profile
+                </button>
+              )} */}
             </div>
 
             {/* Edit Profile Modal */}
